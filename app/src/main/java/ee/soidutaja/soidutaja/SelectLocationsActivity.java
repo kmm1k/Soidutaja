@@ -1,5 +1,6 @@
 package ee.soidutaja.soidutaja;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +12,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class SelectLocations extends AppCompatActivity {
+import java.util.List;
 
-    private String LOG_TAG = SelectLocations.class.getSimpleName();
+public class SelectLocationsActivity extends AppCompatActivity {
+
+    private String LOG_TAG = SelectLocationsActivity.class.getSimpleName();
     private Spinner startSpinner;
     private Spinner endSpinner;
     private Button nextBtn;
@@ -38,8 +41,10 @@ public class SelectLocations extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SelectLocations.this, "j2rgmine vaade", Toast.LENGTH_LONG).show();
+                Toast.makeText(SelectLocationsActivity.this, "j2rgmine vaade", Toast.LENGTH_LONG).show();
                 Log.d(LOG_TAG, "you should see next activity");
+                Intent intent = new Intent(SelectLocationsActivity.this,ListOfAllTripsActivity.class);
+                startActivity(intent);
             }
         });
     }

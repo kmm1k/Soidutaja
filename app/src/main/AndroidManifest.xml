@@ -17,8 +17,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SelectLocations"
+            android:name=".SelectLocationsActivity"
             android:label="@string/title_activity_select_locations" >
+        </activity>
+        <activity
+            android:name=".ListOfAllTripsActivity"
+            android:label="@string/title_activity_list_of_all_trips" >
         </activity>
     </application>
 

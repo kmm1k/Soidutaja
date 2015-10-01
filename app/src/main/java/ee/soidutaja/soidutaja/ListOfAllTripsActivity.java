@@ -1,47 +1,34 @@
 package ee.soidutaja.soidutaja;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class SelectRoleActivity extends AppCompatActivity {
+public class ListOfAllTripsActivity extends AppCompatActivity {
 
-    private Button driverBtn;
-    private Button passengerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
+        setContentView(R.layout.activity_list_of_all_trips);
 
-        driverBtn = (Button) findViewById(R.id.driverButton);
-        passengerBtn = (Button) findViewById(R.id.passengerButton);
-
-        driverBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        passengerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        String[]  myStringArray={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"};
+        ArrayAdapter<String> myAdapter=new
+                ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1,
+                myStringArray);
+        ListView myList=(ListView)
+                findViewById(R.id.ListView);
+        myList.setAdapter(myAdapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_first, menu);
+        getMenuInflater().inflate(R.menu.menu_list_of_all_trips, menu);
         return true;
     }
 
