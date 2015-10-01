@@ -3,4 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="driverButton_title">Sõidutaja</string>
+    <string name="passengerButton_title">Sõitja</string>
+    <string name="title_activity_select_locations">SelectLocations</string>
+    <string name="choose_end_title">Vali sihtkoht</string>
+    <string name="choose_start_title">Vali l2htekoht</string>
+    <string name="next_button_title">Edasi</string>
 </resources>

@@ -1,17 +1,41 @@
 package ee.soidutaja.soidutaja;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-public class FirstActivity extends AppCompatActivity {
+public class SelectRoleActivity extends AppCompatActivity {
+
+    private Button driverBtn;
+    private Button passengerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-		system.out.println("LAMMAS!");
+
+        driverBtn = (Button) findViewById(R.id.driverButton);
+        passengerBtn = (Button) findViewById(R.id.passengerButton);
+
+        driverBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        passengerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectRoleActivity.this, SelectLocations.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
