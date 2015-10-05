@@ -24,6 +24,10 @@
             android:name=".ListOfAllTripsActivity"
             android:label="@string/title_activity_list_of_all_trips" >
         </activity>
+        <activity
+            android:name=".TripInfoView"
+            android:label="@string/title_activity_trip_info_view" >
+        </activity>
     </application>
 
 </manifest>

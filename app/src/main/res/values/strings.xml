@@ -10,4 +10,5 @@
     <string name="choose_start_title">Vali l2htekoht</string>
     <string name="next_button_title">Edasi</string>
     <string name="title_activity_list_of_all_trips">ListOfAllTripsActivity</string>
+    <string name="title_activity_trip_info_view">TripInfoView</string>
 </resources>
