@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,24 +29,30 @@ public class SelectLocationsActivity extends AppCompatActivity {
     private Spinner startSpinner;
     private Spinner endSpinner;
     private Button nextBtn;
-    private String fileContents;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_locations);
+        Intent intent = getIntent();
+        String fileContents = intent.getStringExtra("fileContents");
+        Log.d("lammas", fileContents);
+        String[] startLocations = new String[]{"1", "2", "three"};
 
-        DownloadData downloadData = new DownloadData();
-        downloadData.execute("http://193.40.243.200/soidutaja/");
+        try {
+            startLocations = convertToStringArray(new JSONObject(fileContents));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         startSpinner = (Spinner) findViewById(R.id.startSpinner);
-        String[] startLocations = new String[]{"1", "2", "three"};
         ArrayAdapter<String> adapterStart = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, startLocations);
         startSpinner.setAdapter(adapterStart);
 
         endSpinner = (Spinner) findViewById(R.id.endSpinner);
-        String[] endLocations = new String[]{"1", "2", "three"};
+        String[] endLocations = startLocations;
         ArrayAdapter<String> adapterEnd = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, endLocations);
         endSpinner.setAdapter(adapterEnd);
 
@@ -53,10 +62,18 @@ public class SelectLocationsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(SelectLocationsActivity.this, "j2rgmine vaade", Toast.LENGTH_LONG).show();
                 Log.d(LOG_TAG, "you should see next activity");
-                Intent intent = new Intent(SelectLocationsActivity.this,ListOfAllTripsActivity.class);
+                Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    public String[] convertToStringArray(JSONObject jsonString) throws JSONException {
+        String[] stringArray = new String[jsonString.length()];
+        for(int i = 0; i < jsonString.length(); i++){
+            stringArray[i] = jsonString.getString(Integer.toString(i));
+        }
+        return stringArray;
     }
 
     @Override
@@ -81,53 +98,5 @@ public class SelectLocationsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class DownloadData extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-            fileContents = downloadFile(params[0]);
-            if(fileContents == null) {
-                Log.d("DownloadData", "Error downloading");
-            }
-            return fileContents;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.d("DownloadData", "Result was: " + result);
-        }
-
-        private String downloadFile(String urlPath) {
-            StringBuilder tempBuffer = new StringBuilder();
-            try {
-                URL url = new URL(urlPath);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                int response = connection.getResponseCode();
-                Log.d("DownloadData", "The responsecode was: " + response);
-                InputStream is = connection.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-
-                int charRead;
-                char[] inputBuffer = new char[500];
-
-                while(true) {
-                    charRead = isr.read(inputBuffer);
-                    if(charRead <= 0) {
-                        break;
-                    }
-                    tempBuffer.append(String.copyValueOf(inputBuffer, 0, charRead));
-                }
-
-                return tempBuffer.toString();
-
-            } catch (IOException e) {
-                Log.d("DownloadData", "IOException reading data: " + e.getMessage());
-            } catch (SecurityException e) {
-                Log.d("DownloadData", "Security exception. Needs permission? " + e.getMessage());
-            }
-
-            return null;
-        }
-    }
 }

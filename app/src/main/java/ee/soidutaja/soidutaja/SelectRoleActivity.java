@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,6 +23,7 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     private Button driverBtn;
     private Button passengerBtn;
+    private String fileContents;
 
 
     @Override
@@ -41,9 +45,12 @@ public class SelectRoleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
+                intent.putExtra("fileContents", fileContents);
                 startActivity(intent);
             }
         });
+        DownloadData downloadData = new DownloadData();
+        downloadData.execute("http://193.40.243.200/soidutaja/");
 
     }
 
@@ -67,6 +74,58 @@ public class SelectRoleActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DownloadData extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            fileContents = downloadFile(params[0]);
+            if(fileContents == null) {
+                Log.d("DownloadData", "Error downloading");
+            }
+            return fileContents;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.d("DownloadData", "Result was: " + result);
+        }
+
+        private String downloadFile(String urlPath) {
+            StringBuilder tempBuffer = new StringBuilder();
+            try {
+                URL url = new URL(urlPath);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                int response = connection.getResponseCode();
+                Log.d("DownloadData", "The responsecode was: " + response);
+                InputStream is = connection.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+
+                int charRead;
+                char[] inputBuffer = new char[500];
+
+                while(true) {
+                    charRead = isr.read(inputBuffer);
+                    if(charRead <= 0) {
+                        break;
+                    }
+                    tempBuffer.append(String.copyValueOf(inputBuffer, 0, charRead));
+                }
+
+                return tempBuffer.toString();
+
+            } catch (IOException e) {
+                Log.d("DownloadData", "IOException reading data: " + e.getMessage());
+            } catch (SecurityException e) {
+                Log.d("DownloadData", "Security exception. Needs permission? " + e.getMessage());
+            }
+
+            return null;
+        }
+
     }
 
 
