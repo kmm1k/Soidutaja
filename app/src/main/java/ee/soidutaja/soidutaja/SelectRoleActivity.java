@@ -1,17 +1,26 @@
 package ee.soidutaja.soidutaja;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class SelectRoleActivity extends AppCompatActivity {
 
     private Button driverBtn;
     private Button passengerBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,4 +68,6 @@ public class SelectRoleActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
