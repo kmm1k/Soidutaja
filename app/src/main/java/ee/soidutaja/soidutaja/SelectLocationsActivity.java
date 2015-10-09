@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -25,20 +26,24 @@ import java.util.List;
 
 public class SelectLocationsActivity extends AppCompatActivity {
 
-    private String LOG_TAG = SelectLocationsActivity.class.getSimpleName();
     private Spinner startSpinner;
     private Spinner endSpinner;
     private Button nextBtn;
+    private ProgressBar progressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_locations);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         Intent intent = getIntent();
         String fileContents = intent.getStringExtra("fileContents");
         Log.d("lammas", fileContents);
-        String[] startLocations = new String[]{"1", "2", "three"};
+        String[] startLocations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
 
         try {
             startLocations = convertToStringArray(new JSONObject(fileContents));
@@ -60,8 +65,16 @@ public class SelectLocationsActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SelectLocationsActivity.this, "j2rgmine vaade", Toast.LENGTH_LONG).show();
-                Log.d(LOG_TAG, "you should see next activity");
+                RequestPackage p = new RequestPackage();
+                p.setMethod("POST");
+                //TODO add uri !!!!!!!!!!!!!!!!!!
+                p.setUri("http://193.40.243.200/soidutaja/restful.php");
+                p.setParam("origin", startSpinner.getSelectedItem().toString());
+                p.setParam("destination", endSpinner.getSelectedItem().toString());
+
+                Task task = new Task();
+                task.execute(p);
+
                 Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
                 startActivity(intent);
             }
@@ -96,6 +109,32 @@ public class SelectLocationsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class Task extends AsyncTask<RequestPackage, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            String content = HttpManager.getData(params[0]);
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.INVISIBLE);
+            if(result == null) {
+                Log.d("lammas", "somthing went wrong");
+            }
+            else {
+                Log.d("lammas", result);
+            }
+
+        }
     }
 
 

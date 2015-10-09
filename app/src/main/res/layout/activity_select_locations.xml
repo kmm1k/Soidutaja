@@ -37,6 +37,12 @@
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown" />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal" />
+
     <Button
         android:id="@+id/nextButton"
         android:text="@string/next_button_title"
