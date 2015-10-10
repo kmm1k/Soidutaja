@@ -1,6 +1,9 @@
 package ee.soidutaja.soidutaja;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,14 +48,46 @@ public class SelectRoleActivity extends AppCompatActivity {
         passengerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
-                intent.putExtra("fileContents", fileContents);
-                startActivity(intent);
+                if(isOnline()) {
+                    Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
+                    intent.putExtra("fileContents", fileContents);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        DownloadData downloadData = new DownloadData();
-        downloadData.execute("http://193.40.243.200/soidutaja/");
 
+        if(isOnline()) {
+            Log.d("lammas", "nett on olemas");
+            requestData();
+        }
+        else {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void requestData() {
+        RequestPackage p = new RequestPackage();
+        p.setMethod("GET");
+        //TODO add uri and add param !!!!!!!!!!!!!!!!!!
+        p.setUri("");
+        p.setParam("locations", "yes");
+        DownloadData downloadData = new DownloadData();
+        downloadData.execute(p);
+
+    }
+
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if(netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
@@ -76,54 +112,27 @@ public class SelectRoleActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class DownloadData extends AsyncTask<String, Void, String> {
-
+    private class DownloadData extends AsyncTask<RequestPackage, Void, String> {
 
         @Override
-        protected String doInBackground(String... params) {
-            fileContents = downloadFile(params[0]);
-            if(fileContents == null) {
-                Log.d("DownloadData", "Error downloading");
-            }
-            return fileContents;
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            String content = HttpManager.getData(params[0]);
+            return content;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.d("DownloadData", "Result was: " + result);
-        }
-
-        private String downloadFile(String urlPath) {
-            StringBuilder tempBuffer = new StringBuilder();
-            try {
-                URL url = new URL(urlPath);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                int response = connection.getResponseCode();
-                Log.d("DownloadData", "The responsecode was: " + response);
-                InputStream is = connection.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-
-                int charRead;
-                char[] inputBuffer = new char[500];
-
-                while(true) {
-                    charRead = isr.read(inputBuffer);
-                    if(charRead <= 0) {
-                        break;
-                    }
-                    tempBuffer.append(String.copyValueOf(inputBuffer, 0, charRead));
-                }
-
-                return tempBuffer.toString();
-
-            } catch (IOException e) {
-                Log.d("DownloadData", "IOException reading data: " + e.getMessage());
-            } catch (SecurityException e) {
-                Log.d("DownloadData", "Security exception. Needs permission? " + e.getMessage());
+            if(result == null) {
+                Log.d("lammas", "somthing went wrong");
             }
-
-            return null;
+            else {
+                Log.d("lammas", result);
+            }
         }
 
     }

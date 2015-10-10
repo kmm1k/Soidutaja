@@ -1,6 +1,9 @@
 package ee.soidutaja.soidutaja;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -65,21 +68,38 @@ public class SelectLocationsActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestPackage p = new RequestPackage();
-                p.setMethod("POST");
-                //TODO add uri !!!!!!!!!!!!!!!!!!
-                p.setUri("http://193.40.243.200/soidutaja/restful.php");
-                p.setParam("origin", startSpinner.getSelectedItem().toString());
-                p.setParam("destination", endSpinner.getSelectedItem().toString());
+                if(isOnline()) {
+                    RequestPackage p = new RequestPackage();
+                    p.setMethod("POST");
+                    //TODO add uri !!!!!!!!!!!!!!!!!!
+                    p.setUri("http://193.40.243.200/soidutaja/restful.php");
+                    p.setParam("origin", startSpinner.getSelectedItem().toString());
+                    p.setParam("destination", endSpinner.getSelectedItem().toString());
 
-                Task task = new Task();
-                task.execute(p);
+                    Task task = new Task();
+                    task.execute(p);
 
-                Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
-                startActivity(intent);
+                    Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(SelectLocationsActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if(netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     public String[] convertToStringArray(JSONObject jsonString) throws JSONException {
         String[] stringArray = new String[jsonString.length()];
@@ -133,9 +153,6 @@ public class SelectLocationsActivity extends AppCompatActivity {
             else {
                 Log.d("lammas", result);
             }
-
         }
     }
-
-
 }
