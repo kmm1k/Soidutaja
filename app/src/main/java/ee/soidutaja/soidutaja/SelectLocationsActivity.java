@@ -26,6 +26,7 @@ public class SelectLocationsActivity extends AppCompatActivity {
     private Spinner endSpinner;
     private Button nextBtn;
     private ProgressBar progressBar;
+    private Button allBtn;
 
 
     @Override
@@ -35,6 +36,8 @@ public class SelectLocationsActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+
+        //TODO uncomment kui server valmis, muidu crashib 100%
 
         Intent intent = getIntent();
         //String fileContents = intent.getStringExtra("fileContents");
@@ -46,7 +49,7 @@ public class SelectLocationsActivity extends AppCompatActivity {
 //       } catch (JSONException e) {
 //           e.printStackTrace();
 //       }
-
+        allBtn = (Button) findViewById(R.id.allTrips);
         startSpinner = (Spinner) findViewById(R.id.startSpinner);
         endSpinner = (Spinner) findViewById(R.id.endSpinner);
         ArrayAdapter<String> adapterStart = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, startLocations);
@@ -73,6 +76,18 @@ public class SelectLocationsActivity extends AppCompatActivity {
                 }
                 else {
                     Toast.makeText(SelectLocationsActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        allBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isOnline()) {
+                    //TODO lisa RequestPackage ja pane see intendiga kaasa
+
+                    Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
+                    startActivity(intent);
                 }
             }
         });
