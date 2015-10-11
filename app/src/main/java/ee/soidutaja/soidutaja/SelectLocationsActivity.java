@@ -20,13 +20,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-
 public class SelectLocationsActivity extends AppCompatActivity {
 
     private Spinner startSpinner;
@@ -44,40 +37,36 @@ public class SelectLocationsActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
-        String fileContents = intent.getStringExtra("fileContents");
-        Log.d("lammas", fileContents);
+        //String fileContents = intent.getStringExtra("fileContents");
+        //Log.d("lammas", fileContents);
         String[] startLocations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
 
-        try {
-            startLocations = convertToStringArray(new JSONObject(fileContents));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+//        try {
+//            startLocations = convertToStringArray(new JSONObject(fileContents));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         startSpinner = (Spinner) findViewById(R.id.startSpinner);
+        endSpinner = (Spinner) findViewById(R.id.endSpinner);
         ArrayAdapter<String> adapterStart = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, startLocations);
         startSpinner.setAdapter(adapterStart);
-
-        endSpinner = (Spinner) findViewById(R.id.endSpinner);
-        String[] endLocations = startLocations;
-        ArrayAdapter<String> adapterEnd = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, endLocations);
-        endSpinner.setAdapter(adapterEnd);
+        endSpinner.setAdapter(adapterStart);
 
         nextBtn = (Button) findViewById(R.id.nextButton);
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isOnline()) {
-                    RequestPackage p = new RequestPackage();
-                    p.setMethod("POST");
-                    //TODO add uri !!!!!!!!!!!!!!!!!!
-                    p.setUri("http://193.40.243.200/soidutaja/restful.php");
-                    p.setParam("origin", startSpinner.getSelectedItem().toString());
-                    p.setParam("destination", endSpinner.getSelectedItem().toString());
+                    RequestPackage rp = new RequestPackage();
+                    rp.setMethod("POST");
+                    //TODO add correct uri !!!!!!!!!!!!!!!!!!
+                    rp.setUri("http://193.40.243.200/soidutaja/restful.php");
+                    rp.setParam("origin", startSpinner.getSelectedItem().toString());
+                    rp.setParam("destination", endSpinner.getSelectedItem().toString());
 
                     Task task = new Task();
-                    task.execute(p);
+                    task.execute(rp);
 
                     Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
                     startActivity(intent);
@@ -100,7 +89,6 @@ public class SelectLocationsActivity extends AppCompatActivity {
         }
     }
 
-
     public String[] convertToStringArray(JSONObject jsonString) throws JSONException {
         String[] stringArray = new String[jsonString.length()];
         for(int i = 0; i < jsonString.length(); i++){
@@ -111,23 +99,16 @@ public class SelectLocationsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_select_locations, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

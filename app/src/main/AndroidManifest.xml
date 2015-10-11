@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ee.soidutaja.soidutaja" >
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -30,7 +32,10 @@
             android:name=".TripInfoView"
             android:label="@string/title_activity_trip_info_view" >
         </activity>
+        <activity
+            android:name=".MakeDriveActivity"
+            android:label="@string/title_activity_make_drive" >
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

@@ -30,9 +30,9 @@ public class HttpManager {
 
             if(p.getMethod().equals("POST")) {
                 con.setDoOutput(true);
-                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-                writer.write(p.getEncodedParams());
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream()); //selles reas voib midagi putsis olla
                 Log.d("lammas", "hakkas POSTima");
+                writer.write(p.getEncodedParams());
                 writer.flush();
             }
 

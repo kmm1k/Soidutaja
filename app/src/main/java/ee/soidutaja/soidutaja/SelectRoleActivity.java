@@ -41,7 +41,9 @@ public class SelectRoleActivity extends AppCompatActivity {
         driverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(SelectRoleActivity.this, MakeDriveActivity.class);
+                intent.putExtra("fileContents", fileContents);
+                startActivity(intent);
             }
         });
 
@@ -50,7 +52,7 @@ public class SelectRoleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(isOnline()) {
                     Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
-                    intent.putExtra("fileContents", fileContents);
+                    //intent.putExtra("fileContents", fileContents);
                     startActivity(intent);
                 }
                 else {
@@ -61,7 +63,7 @@ public class SelectRoleActivity extends AppCompatActivity {
 
         if(isOnline()) {
             Log.d("lammas", "nett on olemas");
-            requestData();
+            //requestData();
         }
         else {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
@@ -92,23 +94,16 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_first, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

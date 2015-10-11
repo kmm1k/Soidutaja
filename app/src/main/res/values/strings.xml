@@ -11,4 +11,10 @@
     <string name="next_button_title">Edasi</string>
     <string name="title_activity_list_of_all_trips">ListOfAllTripsActivity</string>
     <string name="title_activity_trip_info_view">TripInfoView</string>
+    <string name="title_activity_make_drive">MakeDriveActivity</string>
+    <string name="make_drive_choose_start_text">Vali alguspunkt</string>
+    <string name="make_drive_choose_end_text">Vali sihtpunkt</string>
+    <string name="make_drive_choose_date_text">Vali kuup2ev</string>
+    <string name="make_drive_nextButton_text">edasi</string>
+    <string name="make_drive_dateButton_text">Vali kuup2ev</string>
 </resources>

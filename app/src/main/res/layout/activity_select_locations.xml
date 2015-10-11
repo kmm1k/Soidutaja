@@ -19,7 +19,6 @@
         android:id="@+id/startSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown" />
 
     <TextView
@@ -34,8 +33,8 @@
         android:id="@+id/endSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown" />
+        <!--android:background="@android:drawable/btn_dropdown"-->
 
     <ProgressBar
         android:layout_width="wrap_content"
