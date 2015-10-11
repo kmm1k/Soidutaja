@@ -23,7 +23,7 @@ public class JSONParser {
                 // peaks need muutujad k2tte saama nii:
                 drive.setDestination(obj.getString("destination"));
                 drive.setOrigin(obj.getString("origin"));
-
+                //muu stuff on vaja samamoodi k2tte saada
                 driveList.add(drive);
             }
             return driveList;
