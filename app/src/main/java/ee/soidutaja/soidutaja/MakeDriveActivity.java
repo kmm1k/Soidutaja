@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +36,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     private EditText price;
     private EditText spots;
     private EditText name;
+    private EditText info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         spots = (EditText) findViewById(R.id.spotsField);
         name = (EditText) findViewById(R.id.name);
         nxtBtn = (Button) findViewById(R.id.nextButton);
+        info = (EditText) findViewById(R.id.additionalInfo);
 
         String[] locations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
         ArrayAdapter<String> adapterEnd = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, locations);
@@ -62,10 +66,26 @@ public class MakeDriveActivity extends AppCompatActivity {
                 if(isInputValid()) {
                     new AlertDialog.Builder(MakeDriveActivity.this)
                             .setTitle("Soidu kinnitus")
-                            .setMessage("Kas kinnitan su soidu?")
+                            .setMessage("Kas kinnitan su sõidu?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // continue to work with database
+                                    Drive drive = new Drive();
+                                    drive.setOrigin(startSpinner.getSelectedItem().toString());
+                                    drive.setDestination(endSpinner.getSelectedItem().toString());
+                                    drive.setDate(dateDD.getText().toString() + "/" + dateMM.getText().toString());
+                                    drive.setTime(timeHour.getText().toString() + ":" + timeMinute.getText().toString());
+                                    drive.setAvailableSlots(Integer.parseInt(spots.getText().toString()));
+                                    drive.setPrice(price.getText().toString());
+                                    drive.setUser(name.getText().toString());
+                                    if(info.getText().toString().matches("")) {
+                                        drive.setInfo("Puudub");
+                                    }
+                                    else {
+                                        drive.setInfo(info.getText().toString());
+                                    }
+                                    Intent intent = new Intent(MakeDriveActivity.this, CreatedDriveView.class);
+                                    intent.putExtra("driveObj", drive);
+                                    startActivity(intent);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -126,6 +146,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     public boolean isPriceValid() {
         if(price.getText().toString().equalsIgnoreCase("")) {
             Toast.makeText(MakeDriveActivity.this, "Lisa hind", Toast.LENGTH_SHORT).show();
+            price.setError("Lisa hind");
             return false;
         }
         else {
@@ -136,6 +157,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     public boolean isSpotsValid() {
         if(spots.getText().toString().equalsIgnoreCase("")) {
             Toast.makeText(MakeDriveActivity.this, "Lisa kohtade arv", Toast.LENGTH_SHORT).show();
+            spots.setError("Lisa vabade kohtade arv");
             return false;
         }
         else {
@@ -146,6 +168,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     public boolean isNameValid() {
         if(name.getText().toString().equalsIgnoreCase("")) {
             Toast.makeText(MakeDriveActivity.this, "Lisa enda nimi", Toast.LENGTH_SHORT).show();
+            name.setError("Lisa enda nimi!");
             return false;
         }
         else {

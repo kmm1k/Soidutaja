@@ -14,15 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 public class SelectRoleActivity extends AppCompatActivity {
 
     private Button driverBtn;
@@ -42,7 +33,7 @@ public class SelectRoleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectRoleActivity.this, MakeDriveActivity.class);
-                intent.putExtra("fileContents", fileContents);
+                //intent.putExtra("fileContents", fileContents);
                 startActivity(intent);
             }
         });
@@ -63,7 +54,7 @@ public class SelectRoleActivity extends AppCompatActivity {
 
         if(isOnline()) {
             Log.d("lammas", "nett on olemas");
-            //requestData();
+            requestData();
         }
         else {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
@@ -74,7 +65,7 @@ public class SelectRoleActivity extends AppCompatActivity {
         RequestPackage p = new RequestPackage();
         p.setMethod("GET");
         //TODO add uri and add param !!!!!!!!!!!!!!!!!!
-        p.setUri("");
+        p.setUri("http://193.40.243.200/soidutaja/restful.php");
         p.setParam("locations", "yes");
         DownloadData downloadData = new DownloadData();
         downloadData.execute(p);

@@ -1,20 +1,20 @@
 <resources>
     <string name="app_name">Soidutaja</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="driverButton_title">Sõidutaja</string>
     <string name="passengerButton_title">Sõitja</string>
     <string name="title_activity_select_locations">SelectLocations</string>
     <string name="choose_end_title">Vali sihtkoht</string>
-    <string name="choose_start_title">Vali l2htekoht</string>
+    <string name="choose_start_title">Vali lähtekoht</string>
     <string name="next_button_title">Edasi</string>
     <string name="title_activity_list_of_all_trips">ListOfAllTripsActivity</string>
     <string name="title_activity_trip_info_view">TripInfoView</string>
     <string name="title_activity_make_drive">MakeDriveActivity</string>
     <string name="make_drive_choose_start_text">Vali alguspunkt</string>
     <string name="make_drive_choose_end_text">Vali sihtpunkt</string>
-    <string name="make_drive_choose_date_text">Vali kuup2ev</string>
+    <string name="make_drive_choose_date_text">Vali kuupäev</string>
     <string name="make_drive_nextButton_text">edasi</string>
-    <string name="make_drive_dateButton_text">Vali kuup2ev</string>
+    <string name="make_drive_dateButton_text">Vali kuupäev</string>
+    <string name="title_activity_created_drive_view">CreatedDriveView</string>
 </resources>

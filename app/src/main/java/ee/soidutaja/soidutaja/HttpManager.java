@@ -30,7 +30,7 @@ public class HttpManager {
 
             if(p.getMethod().equals("POST")) {
                 con.setDoOutput(true);
-                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream()); //selles reas voib midagi putsis olla
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
                 Log.d("lammas", "hakkas POSTima");
                 writer.write(p.getEncodedParams());
                 writer.flush();
@@ -44,7 +44,6 @@ public class HttpManager {
                 sb.append(line + "\n");
             }
 
-            Log.d("lammas", sb.toString());
             return sb.toString();
         } catch (Exception e) {
             Log.d("lammas", "http manager on putsis");

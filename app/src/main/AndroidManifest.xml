@@ -36,6 +36,10 @@
             android:name=".MakeDriveActivity"
             android:label="@string/title_activity_make_drive" >
         </activity>
+        <activity
+            android:name=".CreatedDriveView"
+            android:label="@string/title_activity_created_drive_view" >
+        </activity>
     </application>
 
 </manifest>

@@ -41,11 +41,11 @@ public class SelectLocationsActivity extends AppCompatActivity {
         //Log.d("lammas", fileContents);
         String[] startLocations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
 
-//        try {
-//            startLocations = convertToStringArray(new JSONObject(fileContents));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+//       try {
+//           startLocations = convertToStringArray(new JSONObject(fileContents));
+//       } catch (JSONException e) {
+//           e.printStackTrace();
+//       }
 
         startSpinner = (Spinner) findViewById(R.id.startSpinner);
         endSpinner = (Spinner) findViewById(R.id.endSpinner);
