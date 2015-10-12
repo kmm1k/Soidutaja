@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SelectRoleActivity extends AppCompatActivity {
 
     private Button driverBtn;
     private Button passengerBtn;
-    private String fileContents;
+    private List<String> locations;
 
 
     @Override
@@ -33,22 +37,7 @@ public class SelectRoleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SelectRoleActivity.this, MakeDriveActivity.class);
-                //intent.putExtra("fileContents", fileContents);
                 startActivity(intent);
-            }
-        });
-
-        passengerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isOnline()) {
-                    Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
-                    //intent.putExtra("fileContents", fileContents);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
@@ -64,8 +53,7 @@ public class SelectRoleActivity extends AppCompatActivity {
     public void requestData() {
         RequestPackage p = new RequestPackage();
         p.setMethod("GET");
-        //TODO add uri and add param !!!!!!!!!!!!!!!!!!
-        p.setUri("http://193.40.243.200/soidutaja/restful.php");
+        p.setUri("http://193.40.243.200/soidutaja_php/");
         p.setParam("locations", "yes");
         DownloadData downloadData = new DownloadData();
         downloadData.execute(p);
@@ -81,6 +69,22 @@ public class SelectRoleActivity extends AppCompatActivity {
         else {
             return false;
         }
+    }
+
+    public void addButton() {
+        passengerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isOnline()) {
+                    Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
+                    intent.putExtra("loc", (ArrayList<String>) locations);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -118,6 +122,8 @@ public class SelectRoleActivity extends AppCompatActivity {
             }
             else {
                 Log.d("lammas", result);
+                locations = JSONParser.parseLocations(result);
+                addButton();
             }
         }
 

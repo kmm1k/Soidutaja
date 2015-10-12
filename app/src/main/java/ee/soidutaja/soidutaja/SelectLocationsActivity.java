@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,8 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectLocationsActivity extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ public class SelectLocationsActivity extends AppCompatActivity {
     private Button nextBtn;
     private ProgressBar progressBar;
     private Button allBtn;
+    private List<Drive> drives;
 
 
     @Override
@@ -37,22 +39,12 @@ public class SelectLocationsActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        //TODO uncomment kui server valmis, muidu crashib 100%
+        List<String> locations = getIntent().getStringArrayListExtra("loc");
 
-        Intent intent = getIntent();
-        //String fileContents = intent.getStringExtra("fileContents");
-        //Log.d("lammas", fileContents);
-        String[] startLocations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
-
-//       try {
-//           startLocations = convertToStringArray(new JSONObject(fileContents));
-//       } catch (JSONException e) {
-//           e.printStackTrace();
-//       }
         allBtn = (Button) findViewById(R.id.allTrips);
         startSpinner = (Spinner) findViewById(R.id.startSpinner);
         endSpinner = (Spinner) findViewById(R.id.endSpinner);
-        ArrayAdapter<String> adapterStart = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, startLocations);
+        ArrayAdapter<String> adapterStart = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, locations);
         startSpinner.setAdapter(adapterStart);
         endSpinner.setAdapter(adapterStart);
 
@@ -64,15 +56,12 @@ public class SelectLocationsActivity extends AppCompatActivity {
                     RequestPackage rp = new RequestPackage();
                     rp.setMethod("POST");
                     //TODO add correct uri !!!!!!!!!!!!!!!!!!
-                    rp.setUri("http://193.40.243.200/soidutaja/restful.php");
+                    rp.setUri("http://193.40.243.200/soidutaja_php/");
                     rp.setParam("origin", startSpinner.getSelectedItem().toString());
                     rp.setParam("destination", endSpinner.getSelectedItem().toString());
 
                     Task task = new Task();
                     task.execute(rp);
-
-                    Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
-                    startActivity(intent);
                 }
                 else {
                     Toast.makeText(SelectLocationsActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
@@ -102,14 +91,6 @@ public class SelectLocationsActivity extends AppCompatActivity {
         else {
             return false;
         }
-    }
-
-    public String[] convertToStringArray(JSONObject jsonString) throws JSONException {
-        String[] stringArray = new String[jsonString.length()];
-        for(int i = 0; i < jsonString.length(); i++){
-            stringArray[i] = jsonString.getString(Integer.toString(i));
-        }
-        return stringArray;
     }
 
     @Override
@@ -148,6 +129,10 @@ public class SelectLocationsActivity extends AppCompatActivity {
             }
             else {
                 Log.d("lammas", result);
+                drives = JSONParser.parseDriveObjects(result);
+                Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
+                intent.putParcelableArrayListExtra("list", (ArrayList<? extends Parcelable>) drives);
+                startActivity(intent);
             }
         }
     }

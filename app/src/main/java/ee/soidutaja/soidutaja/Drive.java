@@ -19,7 +19,6 @@ public class Drive implements Parcelable {
     private String info;
     private int availableSlots;
 
-
     public Drive() {
 
     }
@@ -126,5 +125,19 @@ public class Drive implements Parcelable {
         dest.writeString(price);
         dest.writeString(info);
         dest.writeInt(availableSlots);
+    }
+
+    @Override
+    public String toString() {
+        return "Drive{" +
+                "user='" + user + '\'' +
+                ", origin='" + origin + '\'' +
+                ", destination='" + destination + '\'' +
+                ", time='" + time + '\'' +
+                ", date='" + date + '\'' +
+                ", price='" + price + '\'' +
+                ", info='" + info + '\'' +
+                ", availableSlots=" + availableSlots +
+                '}';
     }
 }

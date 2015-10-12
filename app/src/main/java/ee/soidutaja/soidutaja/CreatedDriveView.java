@@ -23,7 +23,7 @@ public class CreatedDriveView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_created_drive_view);
 
-        Drive driveInfo = (Drive) getIntent().getParcelableExtra("driveObj");
+        Drive driveInfo = getIntent().getParcelableExtra("driveObj");
         Log.d("lammas", "andis objekti edasi");
 
         origin = (TextView) findViewById(R.id.origin);

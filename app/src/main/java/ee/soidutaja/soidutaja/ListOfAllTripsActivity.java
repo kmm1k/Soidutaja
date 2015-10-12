@@ -1,14 +1,19 @@
 package ee.soidutaja.soidutaja;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.List;
+import java.util.Objects;
 
 public class ListOfAllTripsActivity extends AppCompatActivity {
 
@@ -18,19 +23,22 @@ public class ListOfAllTripsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_all_trips);
 
-        String[]  myStringArray={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"};
-        ArrayAdapter<String> myAdapter=new
-                ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1,
-                myStringArray);
-        ListView myList=(ListView)
-                findViewById(R.id.ListView);
-        myList.setAdapter(myAdapter);
+        List<Drive> driveList = getIntent().getParcelableArrayListExtra("list");
+        Log.d("lammas", driveList.toString());
+        DriveAdapter adapter = new DriveAdapter(this, driveList);
+
+        final ListView myList=(ListView) findViewById(R.id.ListView);
+        myList.setAdapter(adapter);
 
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object obj = myList.getAdapter().getItem(position);
+                String value = obj.toString();
+                Log.d("lammas", "list item value: " + value);
+
                 Intent intent = new Intent(ListOfAllTripsActivity.this, TripInfoView.class);
+                intent.putExtra("obj", (Parcelable) obj);
                 startActivity(intent);
             }
         });

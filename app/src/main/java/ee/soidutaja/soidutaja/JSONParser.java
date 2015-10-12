@@ -1,5 +1,7 @@
 package ee.soidutaja.soidutaja;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,21 +14,65 @@ import java.util.List;
  */
 public class JSONParser {
     public static List<Drive> parseDriveObjects(String content) {
-        try {
-            JSONArray ar = new JSONArray(content);
-            List<Drive> driveList = new ArrayList<>();
+        List<Drive> driveList = new ArrayList<Drive>();
 
-            for(int i = 0; i < ar.length(); i++) {
-                JSONObject obj = ar.getJSONObject(i);
+        try {
+            JSONObject ar = new JSONObject(content);
+
+            int i = 0;
+
+            while(!ar.isNull(""+i)) {
+
+                JSONObject obj = ar.getJSONObject("" + i);
                 Drive drive = new Drive();
-                //eeldades, et JSONi value nimed on destination ja origin,
-                // peaks need muutujad k2tte saama nii:
+                Log.d("lammas", obj.toString());
                 drive.setDestination(obj.getString("destination"));
                 drive.setOrigin(obj.getString("origin"));
-                //muu stuff on vaja samamoodi k2tte saada
+                drive.setUser(obj.getString("creator"));
+                drive.setPrice(obj.getString("price"));
+                drive.setTime(obj.getString("start_time"));
+                drive.setAvailableSlots(Integer.parseInt(obj.getString("open_slots")));
+
                 driveList.add(drive);
+                i++;
+                Log.d("lammas", drive.toString());
+            }
+            if(driveList == null) {
+                Log.d("lammas", "JSON drive object parser on perses");
+            }
+            else {
+                Log.d("lammas", "listi suurus: " + driveList.size());
             }
             return driveList;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<String> parseLocations(String content) {
+        List<String> locations = new ArrayList<String>();
+
+        try {
+            JSONObject ar = new JSONObject(content);
+
+            int i = 0;
+
+            while(!ar.isNull(""+i)) {
+
+                JSONObject obj = ar.getJSONObject("" + i);
+                Log.d("lammas", obj.toString());
+                locations.add(obj.getString("location"));
+                i++;
+            }
+            if(locations == null) {
+                Log.d("lammas", "JSON location parser on perses");
+            }
+            else {
+                Log.d("lammas", "listi suurus: " + locations.size());
+            }
+            return locations;
         }
         catch (JSONException e) {
             e.printStackTrace();
