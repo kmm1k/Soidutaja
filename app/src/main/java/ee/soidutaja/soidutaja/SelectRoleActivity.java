@@ -33,14 +33,6 @@ public class SelectRoleActivity extends AppCompatActivity {
         driverBtn = (Button) findViewById(R.id.driverButton);
         passengerBtn = (Button) findViewById(R.id.passengerButton);
 
-        driverBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectRoleActivity.this, MakeDriveActivity.class);
-                startActivity(intent);
-            }
-        });
-
         if(isOnline()) {
             Log.d("lammas", "nett on olemas");
             requestData();
@@ -83,6 +75,15 @@ public class SelectRoleActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        driverBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectRoleActivity.this, MakeDriveActivity.class);
+                intent.putExtra("loc", (ArrayList<String>) locations);
+                startActivity(intent);
             }
         });
     }

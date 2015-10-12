@@ -22,6 +22,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class MakeDriveActivity extends AppCompatActivity {
 
@@ -57,7 +58,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         nxtBtn = (Button) findViewById(R.id.nextButton);
         info = (EditText) findViewById(R.id.additionalInfo);
 
-        String[] locations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
+        List<String> locations = getIntent().getStringArrayListExtra("loc");
         ArrayAdapter<String> adapterEnd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations);
         endSpinner.setAdapter(adapterEnd);
         startSpinner.setAdapter(adapterEnd);
@@ -105,11 +106,11 @@ public class MakeDriveActivity extends AppCompatActivity {
         rp.setUri("http://193.40.243.200/soidutaja_php/");
         rp.setParam("origin", drive.getOrigin());
         rp.setParam("destination", drive.getDestination());
-        rp.setParam("user", drive.getUser());
+        rp.setParam("name", drive.getUser());
         rp.setParam("price", drive.getPrice());
-        rp.setParam("slots", "" + drive.getAvailableSlots());
+        rp.setParam("openSlots", "" + drive.getAvailableSlots());
         rp.setParam("dateTime", drive.getDateTime());
-        rp.setParam("info", drive.getInfo());
+        rp.setParam("description", drive.getInfo());
         PushPackage pb = new PushPackage();
         pb.execute(rp);
 

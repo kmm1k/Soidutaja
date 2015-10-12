@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class Drive implements Parcelable {
 
+    private String id;
     private String user;
     private String origin;
     private String destination;
@@ -83,6 +84,14 @@ public class Drive implements Parcelable {
 
     public void setDateTime(String date) {
         this.dateTime = date;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPrice() {

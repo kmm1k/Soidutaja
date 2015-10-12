@@ -55,7 +55,6 @@ public class SelectLocationsActivity extends AppCompatActivity {
                 if(isOnline()) {
                     RequestPackage rp = new RequestPackage();
                     rp.setMethod("POST");
-                    //TODO add correct uri !!!!!!!!!!!!!!!!!!
                     rp.setUri("http://193.40.243.200/soidutaja_php/");
                     rp.setParam("origin", startSpinner.getSelectedItem().toString());
                     rp.setParam("destination", endSpinner.getSelectedItem().toString());
@@ -73,10 +72,13 @@ public class SelectLocationsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(isOnline()) {
-                    //TODO lisa RequestPackage ja pane see intendiga kaasa
+                    RequestPackage rp = new RequestPackage();
+                    rp.setMethod("POST");
+                    rp.setUri("http://193.40.243.200/soidutaja_php/");
+                    rp.setParam("allDrives", "yes");
 
-                    Intent intent = new Intent(SelectLocationsActivity.this, ListOfAllTripsActivity.class);
-                    startActivity(intent);
+                    Task task = new Task();
+                    task.execute(rp);
                 }
             }
         });

@@ -96,7 +96,7 @@ public class TripInfoView extends AppCompatActivity {
         RequestPackage p = new RequestPackage();
         p.setMethod("POST");
         p.setUri("http://193.40.243.200/soidutaja_php/");
-        p.setParam("takeSlot", "yes");
+        p.setParam("driveIdTakeSlot", obj.getId());
         TakeSlot takeSlot = new TakeSlot();
         takeSlot.execute(p);
 
@@ -105,6 +105,8 @@ public class TripInfoView extends AppCompatActivity {
     public void done(String s) {
         Toast.makeText(this, "Sind on lisatud valitud sõidule!", Toast.LENGTH_LONG).show();
         obj.setAvailableSlots(obj.getAvailableSlots() - 1);
+        TextView slots = (TextView) findViewById(R.id.slots);
+        slots.setText("" + obj.getAvailableSlots());
     }
 
     private class TakeSlot extends AsyncTask<RequestPackage, String, String> {
