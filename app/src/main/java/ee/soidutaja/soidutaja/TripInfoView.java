@@ -38,7 +38,7 @@ public class TripInfoView extends AppCompatActivity {
         TextView destination = (TextView) findViewById(R.id.destination);
         destination.setText(obj.getDestination());
         TextView time = (TextView) findViewById(R.id.department);
-        time.setText(obj.getTime());
+        time.setText(obj.getDateTime());
         TextView slots = (TextView) findViewById(R.id.slots);
         slots.setText("" + obj.getAvailableSlots());
         TextView price = (TextView) findViewById(R.id.price);

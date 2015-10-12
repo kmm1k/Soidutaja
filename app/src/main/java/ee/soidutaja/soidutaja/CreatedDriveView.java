@@ -15,8 +15,7 @@ public class CreatedDriveView extends AppCompatActivity {
     private TextView price;
     private TextView slots;
     private TextView info;
-    private TextView date;
-    private TextView time;
+    private TextView dateTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +40,22 @@ public class CreatedDriveView extends AppCompatActivity {
         slots = (TextView) findViewById(R.id.slots);
         slots.setText("" + driveInfo.getAvailableSlots());
 
-        date = (TextView) findViewById(R.id.date);
-        date.setText(driveInfo.getDate());
-
-        time = (TextView) findViewById(R.id.time);
-        time.setText(driveInfo.getTime());
+        dateTime = (TextView) findViewById(R.id.dateTime);
+        dateTime.setText(driveInfo.getDateTime());
 
         info = (TextView) findViewById(R.id.info);
         info.setText(driveInfo.getInfo());
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_created_drive_view, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

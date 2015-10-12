@@ -5,10 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +36,9 @@ public class MakeDriveActivity extends AppCompatActivity {
     private EditText spots;
     private EditText name;
     private EditText info;
+    private String date;
+    private String time;
+    private Drive drive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         info = (EditText) findViewById(R.id.additionalInfo);
 
         String[] locations = new String[]{"Tallinn", "Tartu", "Türi", "Pärnu", "Võru"};
-        ArrayAdapter<String> adapterEnd = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, locations);
+        ArrayAdapter<String> adapterEnd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations);
         endSpinner.setAdapter(adapterEnd);
         startSpinner.setAdapter(adapterEnd);
 
@@ -69,11 +71,10 @@ public class MakeDriveActivity extends AppCompatActivity {
                             .setMessage("Kas kinnitan su sõidu?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Drive drive = new Drive();
+                                    drive = new Drive();
                                     drive.setOrigin(startSpinner.getSelectedItem().toString());
                                     drive.setDestination(endSpinner.getSelectedItem().toString());
-                                    drive.setDate(dateDD.getText().toString() + "/" + dateMM.getText().toString());
-                                    drive.setTime(timeHour.getText().toString() + ":" + timeMinute.getText().toString());
+                                    drive.setDateTime(date + " " + time);
                                     drive.setAvailableSlots(Integer.parseInt(spots.getText().toString()));
                                     drive.setPrice(price.getText().toString());
                                     drive.setUser(name.getText().toString());
@@ -83,9 +84,7 @@ public class MakeDriveActivity extends AppCompatActivity {
                                     else {
                                         drive.setInfo(info.getText().toString());
                                     }
-                                    Intent intent = new Intent(MakeDriveActivity.this, CreatedDriveView.class);
-                                    intent.putExtra("driveObj", drive);
-                                    startActivity(intent);
+                                    pushDrive(drive);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -98,6 +97,22 @@ public class MakeDriveActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void pushDrive(Drive drive) {
+        RequestPackage rp = new RequestPackage();
+        rp.setMethod("POST");
+        rp.setUri("http://193.40.243.200/soidutaja_php/");
+        rp.setParam("origin", drive.getOrigin());
+        rp.setParam("destination", drive.getDestination());
+        rp.setParam("user", drive.getUser());
+        rp.setParam("price", drive.getPrice());
+        rp.setParam("slots", "" + drive.getAvailableSlots());
+        rp.setParam("dateTime", drive.getDateTime());
+        rp.setParam("info", drive.getInfo());
+        PushPackage pb = new PushPackage();
+        pb.execute(rp);
+
     }
 
     public boolean isInputValid() {
@@ -187,6 +202,7 @@ public class MakeDriveActivity extends AppCompatActivity {
                 Log.d("lammas", "aeg on settitud");
                 timeHour.setText("" + selectedHour);
                 timeMinute.setText("" + selectedMinute);
+                time = selectedHour + ":" + selectedMinute;
             }
         }, hour, minute, true);//Yes 24 hour time
         timePicker.setTitle("Select Time");
@@ -202,6 +218,7 @@ public class MakeDriveActivity extends AppCompatActivity {
                 Log.d("lammas", "kuup2ev on settitud");
                 dateDD.setText("" + dayOfMonth);
                 dateMM.setText("" + monthOfYear);
+                date = year + "-" + monthOfYear + "-" + dayOfMonth;
             }
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
         datePicker.setTitle("Select Date");
@@ -210,23 +227,32 @@ public class MakeDriveActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_make_drive, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private class PushPackage extends AsyncTask<RequestPackage, String, String> {
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            String content = HttpManager.getData(params[0]);
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Intent intent = new Intent(MakeDriveActivity.this, CreatedDriveView.class);
+            intent.putExtra("driveObj", drive);
+            startActivity(intent);
+        }
     }
 }

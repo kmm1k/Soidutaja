@@ -13,8 +13,7 @@ public class Drive implements Parcelable {
     private String user;
     private String origin;
     private String destination;
-    private String time;
-    private String date;
+    private String dateTime;
     private String price;
     private String info;
     private int availableSlots;
@@ -27,8 +26,7 @@ public class Drive implements Parcelable {
         user = in.readString();
         origin = in.readString();
         destination = in.readString();
-        time = in.readString();
-        date = in.readString();
+        dateTime = in.readString();
         price = in.readString();
         info = in.readString();
         availableSlots = in.readInt();
@@ -78,20 +76,13 @@ public class Drive implements Parcelable {
         this.destination = destination;
     }
 
-    public String getTime() {
-        return time;
+
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public void setDateTime(String date) {
+        this.dateTime = date;
     }
 
     public String getPrice() {
@@ -120,8 +111,7 @@ public class Drive implements Parcelable {
         dest.writeString(user);
         dest.writeString(origin);
         dest.writeString(destination);
-        dest.writeString(time);
-        dest.writeString(date);
+        dest.writeString(dateTime);
         dest.writeString(price);
         dest.writeString(info);
         dest.writeInt(availableSlots);
@@ -133,8 +123,7 @@ public class Drive implements Parcelable {
                 "user='" + user + '\'' +
                 ", origin='" + origin + '\'' +
                 ", destination='" + destination + '\'' +
-                ", time='" + time + '\'' +
-                ", date='" + date + '\'' +
+                ", dateTime='" + dateTime + '\'' +
                 ", price='" + price + '\'' +
                 ", info='" + info + '\'' +
                 ", availableSlots=" + availableSlots +

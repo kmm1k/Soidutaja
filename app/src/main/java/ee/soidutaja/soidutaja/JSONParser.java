@@ -30,7 +30,7 @@ public class JSONParser {
                 drive.setOrigin(obj.getString("origin"));
                 drive.setUser(obj.getString("creator"));
                 drive.setPrice(obj.getString("price"));
-                drive.setTime(obj.getString("start_time"));
+                drive.setDateTime(obj.getString("start_time"));
                 drive.setAvailableSlots(Integer.parseInt(obj.getString("open_slots")));
 
                 driveList.add(drive);
