@@ -194,16 +194,26 @@ public class MakeDriveActivity extends AppCompatActivity {
 
     public void showTimePickerDialog(View v) {
         Calendar currentTime = Calendar.getInstance();
-        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        final int hour = currentTime.get(Calendar.HOUR_OF_DAY);
         int minute = currentTime.get(Calendar.MINUTE);
         TimePickerDialog timePicker;
         timePicker = new TimePickerDialog(MakeDriveActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 Log.d("lammas", "aeg on settitud");
-                timeHour.setText("" + selectedHour);
-                timeMinute.setText("" + selectedMinute);
-                time = selectedHour + ":" + selectedMinute;
+                String hour = "" + selectedHour;
+                String minute = "" + selectedMinute;
+
+                if(hour.length() < 2) {
+                    hour = 0 + hour;
+                }
+                if(minute.length() < 2) {
+                    minute = 0 + minute;
+                }
+
+                timeHour.setText(hour);
+                timeMinute.setText(minute);
+                time = hour + ":" + minute;
             }
         }, hour, minute, true);//Yes 24 hour time
         timePicker.setTitle("Select Time");
@@ -217,9 +227,17 @@ public class MakeDriveActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Log.d("lammas", "kuup2ev on settitud");
-                dateDD.setText("" + dayOfMonth);
-                dateMM.setText("" + monthOfYear);
-                date = year + "-" + monthOfYear + "-" + dayOfMonth;
+                String month = "" + monthOfYear;
+                String day = "" + dayOfMonth;
+                if(month.length() < 2) {
+                    month = 0 + month;
+                }
+                if(day.length() < 2) {
+                    day = 0 + day;
+                }
+                dateDD.setText(day);
+                dateMM.setText(month);
+                date = year + "-" + month + "-" + day;
             }
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
         datePicker.setTitle("Select Date");

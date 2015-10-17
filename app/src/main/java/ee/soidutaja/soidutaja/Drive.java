@@ -12,7 +12,7 @@ public class Drive implements Parcelable {
 
     private String id;
     private String user;
-    private String origin;
+    public String origin;
     private String destination;
     private String dateTime;
     private String price;
