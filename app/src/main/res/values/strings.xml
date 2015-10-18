@@ -17,4 +17,6 @@
     <string name="make_drive_nextButton_text">edasi</string>
     <string name="make_drive_dateButton_text">Vali kuupäev</string>
     <string name="title_activity_created_drive_view">CreatedDriveView</string>
+    <string name="title_activity_facebook_login">FacebookLoginActivity</string>
+    <string name="facebook_app_id">545092248989245</string>
 </resources>

@@ -15,8 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.widget.LoginButton;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import ee.soidutaja.soidutaja.facebook.LoginActivity;
 
 public class SelectRoleActivity extends AppCompatActivity {
 
@@ -28,10 +34,22 @@ public class SelectRoleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_first);
 
         driverBtn = (Button) findViewById(R.id.driverButton);
         passengerBtn = (Button) findViewById(R.id.passengerButton);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logOut();
+                Intent logOut = new Intent(SelectRoleActivity.this, LoginActivity.class);
+                startActivity(logOut);
+                finish();
+            }
+        });
+
 
         if(isOnline()) {
             Log.d("lammas", "nett on olemas");
