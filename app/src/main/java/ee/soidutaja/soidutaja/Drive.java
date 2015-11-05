@@ -3,8 +3,6 @@ package ee.soidutaja.soidutaja;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * Created by Virx on 11.10.2015.
  */
