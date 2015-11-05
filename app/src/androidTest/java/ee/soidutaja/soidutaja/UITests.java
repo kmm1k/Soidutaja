@@ -1,4 +1,4 @@
-package ee.soidutaja.soidutaja;
+/*package ee.soidutaja.soidutaja;
 
 import android.content.DialogInterface;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -30,9 +30,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-/**
- * Created by Virx on 17.10.2015.
- */
+
 
 public class UITests {
 
@@ -58,3 +56,4 @@ public class UITests {
         //TODO mõtle välja kuidas dialogi buttoneid klikkida saab
     }
 }
+*/
