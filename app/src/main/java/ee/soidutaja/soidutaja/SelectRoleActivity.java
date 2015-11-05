@@ -13,8 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
@@ -28,17 +30,28 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     private Button driverBtn;
     private Button passengerBtn;
+    private Button profileBtn;
     private List<String> locations;
-
+    private ProgressBar progressBar;
+    private List<Drive> drives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_first);
 
         driverBtn = (Button) findViewById(R.id.driverButton);
         passengerBtn = (Button) findViewById(R.id.passengerButton);
+        profileBtn = (Button) findViewById(R.id.profileButton);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+       /* if (isLoggedIn()) {
+            profileBtn.setVisibility(View.VISIBLE);
+        }else{
+            profileBtn.setVisibility(View.GONE);
+        }*/
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,13 +62,31 @@ public class SelectRoleActivity extends AppCompatActivity {
                 finish();
             }
         });
+        if (isLoggedIn()) {
+            loginButton.setVisibility(View.GONE);
+        }else{
+            loginButton.setVisibility(View.VISIBLE);
+        }
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOnline()) {
+                    RequestPackage rp = new RequestPackage();
+                    rp.setMethod("POST");
+                    rp.setUri("http://193.40.243.200/soidutaja_php/");
+                    rp.setParam("allDrives", "yes");
+
+                    Task task = new Task();
+                    task.execute(rp);
+                }
+            }
+        });
 
 
-        if(isOnline()) {
+        if (isOnline()) {
             Log.d("lammas", "nett on olemas");
             requestData();
-        }
-        else {
+        } else {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
         }
     }
@@ -70,13 +101,21 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     }
 
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     protected boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if(netInfo != null && netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -85,16 +124,29 @@ public class SelectRoleActivity extends AppCompatActivity {
         passengerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isOnline()) {
+                if (isOnline()) {
+                    progressBar.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
                     intent.putExtra("loc", (ArrayList<String>) locations);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        /*profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isOnline()) {
+                    Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
+                    intent.putExtra("list", (ArrayList<String>) locations);
                     startActivity(intent);
                 }
                 else {
                     Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
         driverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,10 +188,9 @@ public class SelectRoleActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result == null) {
+            if (result == null) {
                 Log.d("lammas", "somthing went wrong");
-            }
-            else {
+            } else {
                 Log.d("lammas", result);
                 locations = JSONParser.parseLocations(result);
                 addButton();
@@ -148,5 +199,32 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     }
 
+    private class Task extends AsyncTask<RequestPackage, String, String> {
 
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            String content = HttpManager.getData(params[0]);
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.INVISIBLE);
+            if (result == null) {
+                Log.d("lammas", "somthing went wrong");
+            } else {
+                Log.d("lammas", result);
+                drives = JSONParser.parseDriveObjects(result);
+                Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
+                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
+                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
+                startActivity(intent);
+            }
+        }
+    }
 }
