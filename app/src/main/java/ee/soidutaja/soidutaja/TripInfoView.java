@@ -77,21 +77,6 @@ public class TripInfoView extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_trip_info_view, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void requestData() {
         RequestPackage p = new RequestPackage();
         p.setMethod("POST");
@@ -102,29 +87,30 @@ public class TripInfoView extends AppCompatActivity {
 
     }
 
-    public void done(String s) {
+    public boolean done() {
         Toast.makeText(this, "Sind on lisatud valitud sõidule!", Toast.LENGTH_LONG).show();
         obj.setAvailableSlots(obj.getAvailableSlots() - 1);
         TextView slots = (TextView) findViewById(R.id.slots);
         slots.setText("" + obj.getAvailableSlots());
+        return true;
     }
 
     private class TakeSlot extends AsyncTask<RequestPackage, String, String> {
-
+//tegin selle classi publicuks :D
         @Override
         protected String doInBackground(RequestPackage... params) {
             String content = HttpManager.getData(params[0]);
             return content;
         }
 
-        @Override
+        /*@Override
         protected void onPreExecute() {
             super.onPreExecute();
-        }
+        }*/
 
         @Override
         protected void onPostExecute(String s) {
-            done(s);
+            done();
         }
     }
 }

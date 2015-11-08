@@ -47,9 +47,9 @@ public class CreatedDriveView extends AppCompatActivity {
         info.setText(driveInfo.getInfo());
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("menuprint", String.valueOf(menu));
+        //Log.d("menuprint", menu);
         getMenuInflater().inflate(R.menu.menu_created_drive_view, menu);
         return true;
     }
@@ -63,6 +63,6 @@ public class CreatedDriveView extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    */
 
 }

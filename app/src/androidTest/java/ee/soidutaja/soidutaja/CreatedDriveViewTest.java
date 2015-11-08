@@ -18,13 +18,10 @@ public class CreatedDriveViewTest extends ApplicationTestCase<Application> {
     public CreatedDriveViewTest() {
         super(Application.class);
     }
-    @Before
-    public void setUp(){
-        driveView= new CreatedDriveView();
-    }
+
     @Test
-    public void testOnCreatedOptionsMenu(){
-        assertTrue(driveView.onCreateOptionsMenu(menu));
+    public void originSetTextTest(){
+        System.out.printf("TEHTUD TESTID SIIA!");
     }
 
 
