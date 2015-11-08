@@ -1,4 +1,4 @@
-package ee.soidutaja.soidutaja;
+/*package ee.soidutaja.soidutaja;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
@@ -10,6 +10,7 @@ import org.junit.Test;
 /**
  * Created by KristiP on 8.11.2015.
  */
+/*
 public class CreatedDriveViewTest extends ApplicationTestCase<Application> {
 
     private CreatedDriveView driveView;
@@ -29,3 +30,4 @@ public class CreatedDriveViewTest extends ApplicationTestCase<Application> {
 
 
 }
+*/
