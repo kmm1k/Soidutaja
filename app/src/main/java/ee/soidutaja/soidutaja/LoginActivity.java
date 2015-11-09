@@ -1,13 +1,11 @@
-package ee.soidutaja.soidutaja.facebook;
+package ee.soidutaja.soidutaja;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -21,11 +19,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import ee.soidutaja.soidutaja.R;
-import ee.soidutaja.soidutaja.SelectRoleActivity;
 
 /**
  * Created by Virx on 18.10.2015.
