@@ -17,14 +17,20 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import ee.soidutaja.soidutaja.facebook.LoginActivity;
 
 public class SelectRoleActivity extends AppCompatActivity {
 
@@ -34,6 +40,10 @@ public class SelectRoleActivity extends AppCompatActivity {
     private List<String> locations;
     private ProgressBar progressBar;
     private List<Drive> drives;
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private User user = new User();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +57,29 @@ public class SelectRoleActivity extends AppCompatActivity {
         profileBtn = (Button) findViewById(R.id.profileButton);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-       /* if (isLoggedIn()) {
+
+        if(isLoggedIn()) {
             profileBtn.setVisibility(View.VISIBLE);
-        }else{
-            profileBtn.setVisibility(View.GONE);
-        }*/
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginManager.getInstance().logOut();
-                Intent logOut = new Intent(SelectRoleActivity.this, LoginActivity.class);
-                startActivity(logOut);
-                finish();
-            }
-        });
-        if (isLoggedIn()) {
-            loginButton.setVisibility(View.GONE);
-        }else{
-            loginButton.setVisibility(View.VISIBLE);
         }
+        else {
+            profileBtn.setVisibility(View.INVISIBLE);
+        }
+
+//        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+//        loginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("lammas", "successful logout");
+//                if(isLoggedIn()) {
+//                    profileBtn.setVisibility(View.VISIBLE);
+//                }
+//                else {
+//                    profileBtn.setVisibility(View.INVISIBLE);
+//                }
+//                LoginManager.getInstance().logOut();
+//            }
+//        });
+
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +95,6 @@ public class SelectRoleActivity extends AppCompatActivity {
             }
         });
 
-
         if (isOnline()) {
             Log.d("lammas", "nett on olemas");
             requestData();
@@ -90,6 +102,112 @@ public class SelectRoleActivity extends AppCompatActivity {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if(accessToken == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isLoggedIn()) {
+            profileBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            profileBtn.setVisibility(View.INVISIBLE);
+        }
+
+        callbackManager=CallbackManager.Factory.create();
+        loginButton= (LoginButton)findViewById(R.id.login_button);
+        loginButton.setReadPermissions("public_profile", "email", "user_friends");
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginButton.registerCallback(callbackManager, mCallBack);
+                if(isLoggedIn()) {
+                    profileBtn.setVisibility(View.VISIBLE);
+                }
+                else {
+                    profileBtn.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if(isLoggedIn()) {
+            profileBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            profileBtn.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+
+            final GraphRequest request = GraphRequest.newMeRequest(
+                    loginResult.getAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+
+                            Log.e("response: ", response + "");
+                            try {
+                                user.setFacebookID(object.getString("id").toString());
+                                user.setEmail(object.getString("email").toString());
+                                user.setName(object.getString("name").toString());
+                                user.setGender(object.getString("gender").toString());
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(SelectRoleActivity.this,"welcome " + user.getName(), Toast.LENGTH_LONG).show();
+                            if(isLoggedIn()) {
+                                profileBtn.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                profileBtn.setVisibility(View.INVISIBLE);
+                            }
+                            //Intent intent=new Intent(LoginActivity.this, SelectRoleActivity.class);
+                            //startActivity(intent);
+                            //finish();
+                        }
+                    });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id, name, email, gender");
+            Log.d("logi", parameters.toString());
+            request.setParameters(parameters);
+            Log.d("logi", request.toString());
+            request.executeAsync();
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onError(FacebookException e) {
+
+        }
+    };
 
     public void requestData() {
         RequestPackage p = new RequestPackage();
@@ -99,15 +217,6 @@ public class SelectRoleActivity extends AppCompatActivity {
         DownloadData downloadData = new DownloadData();
         downloadData.execute(p);
 
-    }
-
-    public boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken == null) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     protected boolean isOnline() {
@@ -174,11 +283,6 @@ public class SelectRoleActivity extends AppCompatActivity {
     }
 
     private class DownloadData extends AsyncTask<RequestPackage, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-
-        }
 
         @Override
         protected String doInBackground(RequestPackage... params) {

@@ -1,9 +1,7 @@
-package ee.soidutaja.soidutaja.facebook;
+package ee.soidutaja.soidutaja;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Virx on 18.10.2015.
