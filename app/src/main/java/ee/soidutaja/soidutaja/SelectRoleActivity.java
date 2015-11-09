@@ -80,12 +80,6 @@ public class SelectRoleActivity extends AppCompatActivity {
 //            }
 //        });
 
-        if (isLoggedIn()) {
-            profileBtn.setVisibility(View.VISIBLE);
-        }else{
-            profileBtn.setVisibility(View.INVISIBLE);
-        }
-
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
