@@ -1,6 +1,8 @@
 package ee.soidutaja.soidutaja;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +26,7 @@ import java.util.List;
 public class ProfileViewActivity extends AppCompatActivity {
 
     private List<String> locationsList;
+    private TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,16 @@ public class ProfileViewActivity extends AppCompatActivity {
         locationsList = getIntent().getStringArrayListExtra("locationsList");
         List<Drive> passengerList = getIntent().getParcelableArrayListExtra("passengerList");
         Log.d("lammas", driverList.toString());
+        userName = (TextView) findViewById(R.id.usernameTextView);
+
+        if(getIntent().getParcelableExtra("user") != null) {
+            User user = getIntent().getParcelableExtra("user");
+            userName.setText(user.getName());
+//            String id = user.getFacebookID();
+//            URL image_value = new URL("https://graph.facebook.com/" + id + "/picture");
+//            profPict = BitmapFactory.decodeStream(image_value.openConnection().getInputStream());
+        }
+
         DriveAdapter adapter = new DriveAdapter(this, driverList);
 
         final ListView drivesListOutput=(ListView) findViewById(R.id.driverList);
@@ -50,6 +65,21 @@ public class ProfileViewActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfileViewActivity.this, TripInfoView.class);
                 intent.putExtra("obj", (Parcelable) obj);
                 intent.putExtra("loc", (ArrayList<String>) locationsList);
+                intent.putExtra("Kristi", "kristi");
+                startActivity(intent);
+            }
+        });
+        passengerListOutput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object obj = passengerListOutput.getAdapter().getItem(position);
+                String value = obj.toString();
+                Log.d("lammas", "list item value: " + value);
+
+                Intent intent = new Intent(ProfileViewActivity.this, TripInfoView.class);
+                intent.putExtra("obj", (Parcelable) obj);
+                intent.putExtra("loc", (ArrayList<String>) locationsList);
+                intent.putExtra("Tõnis", "tõnis");
                 startActivity(intent);
             }
         });

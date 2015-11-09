@@ -26,6 +26,7 @@ public class TripInfoView extends AppCompatActivity {
     private float rating;
     private Drive obj;
     private Button editTripButton;
+    private Button removeTripButton;
     private List<String> locationsList;
 
     @Override
@@ -36,6 +37,7 @@ public class TripInfoView extends AppCompatActivity {
         takeFreeSpaceButton = (Button) findViewById(R.id.takeSpaceInCar);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         editTripButton = (Button) findViewById(R.id.editTrip);
+        removeTripButton = (Button) findViewById(R.id.removeTrip);
 
         obj = getIntent().getParcelableExtra("obj");
         TextView name = (TextView) findViewById(R.id.driverName);
@@ -56,6 +58,17 @@ public class TripInfoView extends AppCompatActivity {
         }
         locationsList = getIntent().getStringArrayListExtra("loc");
         //Log.d("lammason", "asd" + locationsList.get(1));
+        if(getIntent().getStringExtra("Virgo")!=null){
+            Log.d("lammas", getIntent().getStringExtra("Virgo"));
+            editTripButton.setVisibility(View.INVISIBLE);
+            removeTripButton.setVisibility(View.INVISIBLE);
+        }else if(getIntent().getStringExtra("Kristi")!=null){
+            takeFreeSpaceButton.setVisibility(View.INVISIBLE);
+            removeTripButton.setVisibility(View.INVISIBLE);
+        }else if(getIntent().getStringExtra("Tõnis")!=null){
+            editTripButton.setVisibility(View.INVISIBLE);
+            takeFreeSpaceButton.setVisibility(View.INVISIBLE);
+        }
 
         takeFreeSpaceButton.setOnClickListener(new View.OnClickListener() {
             @Override

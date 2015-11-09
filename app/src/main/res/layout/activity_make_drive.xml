@@ -59,35 +59,21 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/dateDay"
-            android:layout_width="wrap_content"
+            android:id="@+id/date"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="DD"
+            android:text="DD/MM"
+            android:gravity="center"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/dateMonth"
-            android:layout_width="wrap_content"
+            android:id="@+id/time"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="MM"
+            android:text="HOUR:MINUTE"
+            android:gravity="center"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/timeHour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="HOUR"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/timeMinute"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MIN"
-            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout

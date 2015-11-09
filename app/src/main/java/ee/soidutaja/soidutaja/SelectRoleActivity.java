@@ -45,7 +45,7 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private LoginButton loginButton;
-    private ee.soidutaja.soidutaja.facebook.User user = new ee.soidutaja.soidutaja.facebook.User();
+    private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +287,7 @@ public class SelectRoleActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
                 intent.putExtra("locationsList", (ArrayList<String>) locations);
                 intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
+                intent.putExtra("user", (Parcelable) user);
                 startActivity(intent);
             }
         }

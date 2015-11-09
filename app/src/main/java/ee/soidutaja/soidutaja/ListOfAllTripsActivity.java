@@ -39,6 +39,7 @@ public class ListOfAllTripsActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(ListOfAllTripsActivity.this, TripInfoView.class);
                 intent.putExtra("obj", (Parcelable) obj);
+                intent.putExtra("Virgo", "virgo");
                 startActivity(intent);
             }
         });

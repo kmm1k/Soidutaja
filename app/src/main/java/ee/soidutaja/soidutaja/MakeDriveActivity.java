@@ -28,18 +28,17 @@ public class MakeDriveActivity extends AppCompatActivity {
 
     private Spinner startSpinner;
     private Spinner endSpinner;
-    private TextView dateMM;
-    private TextView dateDD;
-    private TextView timeHour;
-    private TextView timeMinute;
+    private TextView date;
+    private TextView time;
     private Button nxtBtn;
     private EditText price;
     private EditText spots;
     private EditText name;
     private EditText info;
-    private String date;
-    private String time;
+    private String dateString;
+    private String timeString;
     private Drive drive;
+    ArrayAdapter<String> adapterEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +47,8 @@ public class MakeDriveActivity extends AppCompatActivity {
 
         startSpinner = (Spinner) findViewById(R.id.startSpinner);
         endSpinner = (Spinner) findViewById(R.id.endSpinner);
-        dateDD = (TextView) findViewById(R.id.dateDay);
-        dateMM = (TextView) findViewById(R.id.dateMonth);
-        timeHour = (TextView) findViewById(R.id.timeHour);
-        timeMinute = (TextView) findViewById(R.id.timeMinute);
+        date = (TextView) findViewById(R.id.date);
+        time = (TextView) findViewById(R.id.time);
         price = (EditText) findViewById(R.id.priceField);
         spots = (EditText) findViewById(R.id.spotsField);
         name = (EditText) findViewById(R.id.name);
@@ -59,7 +56,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         info = (EditText) findViewById(R.id.additionalInfo);
 
         List<String> locations = getIntent().getStringArrayListExtra("loc");
-        ArrayAdapter<String> adapterEnd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations);
+        adapterEnd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations);
         endSpinner.setAdapter(adapterEnd);
         startSpinner.setAdapter(adapterEnd);
 
@@ -107,14 +104,29 @@ public class MakeDriveActivity extends AppCompatActivity {
     }
 
     private void setDriveInfo(Drive drive) {
-        //startSpinner.set
-        dateDD.setText(drive.getDateTime());
+
+        //date.setText(drive.getDateTime());
+        String dateTime= drive.getDateTime();
+        String formatDate =dateTime.substring(0,10);
+        String formatTime= dateTime.substring(11);
+        date.setText(formatDate);
+        time.setText(formatTime);
         price.setText(drive.getPrice());
         info.setText(drive.getInfo());
         spots.setText("" + drive.getAvailableSlots());
         name.setText(drive.getUser());
-        //startSpinner.setSelectedItem(drive.getOrigin());
-
+        String origin= drive.getOrigin();
+        String destination= drive.getDestination();
+        endSpinner.setAdapter(adapterEnd);
+        startSpinner.setAdapter(adapterEnd);
+        if (!origin.equals(null)) {
+            int spinnerPosition = adapterEnd.getPosition(origin);
+            startSpinner.setSelection(spinnerPosition);
+        }
+        if (!destination.equals(null)) {
+            int spinnerPosition = adapterEnd.getPosition(destination);
+            endSpinner.setSelection(spinnerPosition);
+        }
     }
 
     public void pushDrive(Drive drive) {
@@ -157,7 +169,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     }
 
     public boolean isTimeValid() {
-        if(timeHour.getText().equals("HOUR") || timeMinute.getText().equals("MIN")) {
+        if(time.getText().equals("HOUR:MINUTE")) {
             Toast.makeText(MakeDriveActivity.this, "Vale kellaaeg", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -167,7 +179,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     }
 
     public boolean isDateValid() {
-        if(dateDD.getText().equals("DD") || dateMM.getText().equals("MM")) {
+        if(date.getText().equals("DD/MM")) {
             Toast.makeText(MakeDriveActivity.this, "Vale kuup2ev", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -228,9 +240,8 @@ public class MakeDriveActivity extends AppCompatActivity {
                     minute = 0 + minute;
                 }
 
-                timeHour.setText(hour);
-                timeMinute.setText(minute);
-                time = hour + ":" + minute;
+                timeString = hour + ":" + minute;
+                time.setText(timeString);
             }
         }, hour, minute, true);//Yes 24 hour time
         timePicker.setTitle("Select Time");
@@ -252,9 +263,9 @@ public class MakeDriveActivity extends AppCompatActivity {
                 if(day.length() < 2) {
                     day = 0 + day;
                 }
-                dateDD.setText(day);
-                dateMM.setText(month);
-                date = year + "-" + month + "-" + day;
+
+                dateString = year + "-" + month + "-" + day;
+                date.setText(dateString);
             }
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
         datePicker.setTitle("Select Date");
