@@ -1,8 +1,9 @@
 package ee.soidutaja.soidutaja;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,14 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private List<String> locationsList;
     private TextView userName;
+    private ImageView picfield;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        picfield = (ImageView) findViewById(R.id.pingu);
 
         List<Drive> driverList = getIntent().getParcelableArrayListExtra("driverList");
         locationsList = getIntent().getStringArrayListExtra("locationsList");
@@ -42,9 +46,26 @@ public class ProfileViewActivity extends AppCompatActivity {
         if(getIntent().getParcelableExtra("user") != null) {
             User user = getIntent().getParcelableExtra("user");
             userName.setText(user.getName());
-//            String id = user.getFacebookID();
-//            URL image_value = new URL("https://graph.facebook.com/" + id + "/picture");
-//            profPict = BitmapFactory.decodeStream(image_value.openConnection().getInputStream());
+            String id = user.getFacebookID();
+            Log.d("lammas", id);
+            String url = "http://graph.facebook.com/" + id + "/picture?type=large";
+            GetImage getImage = new GetImage();
+            getImage.execute(url);
+//            try {
+//                URL imgUrl = new URL("http://graph.facebook.com/"+ id +"/picture?type=large");
+//                Log.d("kek", "URL tegi 2ra");
+//                InputStream in = (InputStream) imgUrl.getContent();
+//                Log.d("kek", "Bitmap on olemas");
+//                Bitmap  bitmap = BitmapFactory.decodeStream(in);
+////                URL image_path = new URL("http://graph.facebook.com/"+ id+ "/picture?type=large");
+//                Log.d("kek", "image peaks olema settitud");
+////                Bitmap pic = BitmapFactory.decodeStream(image_path.openConnection().getInputStream());
+//                picfield.setImageBitmap(bitmap);
+//            }
+//            catch (Exception e) {
+//                Log.d("kek", "errors");
+//                e.printStackTrace();
+//            }
         }
 
         DriveAdapter adapter = new DriveAdapter(this, driverList);
@@ -106,5 +127,35 @@ public class ProfileViewActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class GetImage extends AsyncTask<String, String, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                URL imgUrl = new URL(params[0]);
+                Log.d("kek", "URL tegi 2ra");
+                InputStream in = (InputStream) imgUrl.getContent();
+                Log.d("kek", "Bitmap on olemas");
+                Bitmap  bitmap = BitmapFactory.decodeStream(in);
+//                URL image_path = new URL("http://graph.facebook.com/"+ id+ "/picture?type=large");
+                Log.d("kek", "image peaks olema settitud");
+//                Bitmap pic = BitmapFactory.decodeStream(image_path.openConnection().getInputStream());
+                return bitmap;
+            }
+            catch (Exception e) {
+                Log.d("kek", "errors");
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            picfield.setImageBitmap(bitmap);
+            Log.d("kek", "done");
+        }
     }
 }

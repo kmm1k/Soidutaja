@@ -170,7 +170,6 @@ public class SelectRoleActivity extends AppCompatActivity {
                                 user.setEmail(object.getString("email").toString());
                                 user.setName(object.getString("name").toString());
                                 user.setGender(object.getString("gender").toString());
-
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
