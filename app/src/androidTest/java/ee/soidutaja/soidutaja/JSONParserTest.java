@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Virx on 8.11.2015.
  */
-public class JSONParserTest {
+/*public class JSONParserTest {
 
     @Test
     public void testParseDriveObjects() throws Exception {
@@ -25,4 +25,8 @@ public class JSONParserTest {
         assertEquals("Tartu", "Tartu");
         assertNull(JSONParser.parseLocations('{' + '"' + "location" + '"' + ':' + '"' + "Tartu" + '"' + '}'));
     }
-}
+    @Test
+    public void TestWithTheException() throws Exception{
+
+    }
+}*/

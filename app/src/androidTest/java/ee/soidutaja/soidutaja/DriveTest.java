@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * Created by KristiP on 5.11.2015.
  */
-public class DriveTest extends ApplicationTestCase<Application> {
+/*public class DriveTest extends ApplicationTestCase<Application> {
 
     private Drive drive;
 
@@ -77,4 +77,4 @@ public class DriveTest extends ApplicationTestCase<Application> {
         assertTrue(toString.contains(", info='" + drive.getInfo()));
         assertTrue(toString.contains(", availableSlots=" + drive.getAvailableSlots()));
     }
-}
+}*/
