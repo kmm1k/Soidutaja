@@ -1,4 +1,4 @@
-package ee.soidutaja.soidutaja;
+//package ee.soidutaja.soidutaja;
 
 import android.content.SyncStatusObserver;
 

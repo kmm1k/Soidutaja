@@ -1,4 +1,4 @@
-package ee.soidutaja.soidutaja;
+//package ee.soidutaja.soidutaja;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
