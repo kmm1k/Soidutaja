@@ -45,6 +45,7 @@
             android:text="@string/make_drive_dateButton_text" />
 
         <Button
+            android:id="@+id/timeButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:onClick="showTimePickerDialog"

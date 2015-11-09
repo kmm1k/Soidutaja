@@ -17,14 +17,22 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ee.soidutaja.soidutaja.facebook.LoginActivity;
+import ee.soidutaja.soidutaja.facebook.*;
 
 public class SelectRoleActivity extends AppCompatActivity {
 
@@ -34,6 +42,10 @@ public class SelectRoleActivity extends AppCompatActivity {
     private List<String> locations;
     private ProgressBar progressBar;
     private List<Drive> drives;
+
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private ee.soidutaja.soidutaja.facebook.User user = new ee.soidutaja.soidutaja.facebook.User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +59,7 @@ public class SelectRoleActivity extends AppCompatActivity {
         profileBtn = (Button) findViewById(R.id.profileButton);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
-       /* if (isLoggedIn()) {
-            profileBtn.setVisibility(View.VISIBLE);
-        }else{
-            profileBtn.setVisibility(View.GONE);
-        }*/
+
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +70,7 @@ public class SelectRoleActivity extends AppCompatActivity {
                 finish();
             }
         });
-        if (isLoggedIn()) {
-            loginButton.setVisibility(View.GONE);
-        }else{
-            loginButton.setVisibility(View.VISIBLE);
-        }
+
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +85,6 @@ public class SelectRoleActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         if (isOnline()) {
             Log.d("lammas", "nett on olemas");
@@ -120,6 +123,80 @@ public class SelectRoleActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        callbackManager=CallbackManager.Factory.create();
+        loginButton= (LoginButton)findViewById(R.id.login_button);
+        loginButton.setReadPermissions("public_profile", "email","user_friends");
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginButton.registerCallback(callbackManager, mCallBack);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if(isLoggedIn()) {
+            profileBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            profileBtn.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+
+            final GraphRequest request = GraphRequest.newMeRequest(
+                    loginResult.getAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+
+                            Log.e("response: ", response + "");
+                            try {
+                                user.setFacebookID(object.getString("id").toString());
+                                user.setEmail(object.getString("email").toString());
+                                user.setName(object.getString("name").toString());
+                                user.setGender(object.getString("gender").toString());
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(SelectRoleActivity.this,"welcome " + user.getName(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id, name, email, gender");
+            Log.d("logi", parameters.toString());
+            request.setParameters(parameters);
+            Log.d("logi", request.toString());
+            request.executeAsync();
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onError(FacebookException e) {
+
+        }
+    };
+
     public void addButton() {
         passengerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,19 +211,6 @@ public class SelectRoleActivity extends AppCompatActivity {
                 }
             }
         });
-        /*profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isOnline()) {
-                    Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
-                    intent.putExtra("list", (ArrayList<String>) locations);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(SelectRoleActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
 
         driverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +260,6 @@ public class SelectRoleActivity extends AppCompatActivity {
                 addButton();
             }
         }
-
     }
 
     private class Task extends AsyncTask<RequestPackage, String, String> {
