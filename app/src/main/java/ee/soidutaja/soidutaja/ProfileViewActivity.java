@@ -13,18 +13,23 @@ import android.widget.ListView;
 
 import com.facebook.AccessToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kmm on 31.10.2015.
  */
 public class ProfileViewActivity extends AppCompatActivity {
+
+    private List<String> locationsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         List<Drive> driverList = getIntent().getParcelableArrayListExtra("driverList");
+        locationsList = getIntent().getStringArrayListExtra("locationsList");
         List<Drive> passengerList = getIntent().getParcelableArrayListExtra("passengerList");
         Log.d("lammas", driverList.toString());
         DriveAdapter adapter = new DriveAdapter(this, driverList);
@@ -44,6 +49,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(ProfileViewActivity.this, TripInfoView.class);
                 intent.putExtra("obj", (Parcelable) obj);
+                intent.putExtra("loc", (ArrayList<String>) locationsList);
                 startActivity(intent);
             }
         });

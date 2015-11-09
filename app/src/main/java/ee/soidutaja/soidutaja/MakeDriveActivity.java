@@ -63,6 +63,12 @@ public class MakeDriveActivity extends AppCompatActivity {
         endSpinner.setAdapter(adapterEnd);
         startSpinner.setAdapter(adapterEnd);
 
+        List<Drive> driveList = getIntent().getParcelableArrayListExtra("info");
+        if (driveList != null) {
+            Drive localDrive = driveList.get(0);
+            setDriveInfo(localDrive);
+
+        }
         nxtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +104,17 @@ public class MakeDriveActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setDriveInfo(Drive drive) {
+        //startSpinner.set
+        dateDD.setText(drive.getDateTime());
+        price.setText(drive.getPrice());
+        info.setText(drive.getInfo());
+        spots.setText("" + drive.getAvailableSlots());
+        name.setText(drive.getUser());
+        //startSpinner.setSelectedItem(drive.getOrigin());
+
     }
 
     public void pushDrive(Drive drive) {

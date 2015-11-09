@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,12 +16,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TripInfoView extends AppCompatActivity {
 
     private Button takeFreeSpaceButton;
     private RatingBar ratingBar;
     private float rating;
     private Drive obj;
+    private Button editTripButton;
+    private List<String> locationsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class TripInfoView extends AppCompatActivity {
 
         takeFreeSpaceButton = (Button) findViewById(R.id.takeSpaceInCar);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        editTripButton = (Button) findViewById(R.id.editTrip);
 
         obj = getIntent().getParcelableExtra("obj");
         TextView name = (TextView) findViewById(R.id.driverName);
@@ -47,6 +54,8 @@ public class TripInfoView extends AppCompatActivity {
         if(obj.getInfo() != null) {
             info.setText(obj.getInfo());
         }
+        locationsList = getIntent().getStringArrayListExtra("loc");
+        //Log.d("lammason", "asd" + locationsList.get(1));
 
         takeFreeSpaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +84,37 @@ public class TripInfoView extends AppCompatActivity {
                 rating = ratingBar.getRating();
             }
         });
+
+        editTripButton.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                ArrayList<Drive> drives = new ArrayList<>();
+                drives.add(obj);
+                Intent intent = new Intent(TripInfoView.this, MakeDriveActivity.class);
+                intent.putExtra("info", (ArrayList<Drive>) drives);
+                intent.putExtra("loc", (ArrayList<String>) locationsList);
+                startActivity(intent);
+            }
+
+
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_trip_info_view, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void requestData() {
@@ -87,30 +127,29 @@ public class TripInfoView extends AppCompatActivity {
 
     }
 
-    public boolean done() {
+    public void done(String s) {
         Toast.makeText(this, "Sind on lisatud valitud sõidule!", Toast.LENGTH_LONG).show();
         obj.setAvailableSlots(obj.getAvailableSlots() - 1);
         TextView slots = (TextView) findViewById(R.id.slots);
         slots.setText("" + obj.getAvailableSlots());
-        return true;
     }
 
     private class TakeSlot extends AsyncTask<RequestPackage, String, String> {
-//tegin selle classi publicuks :D
+
         @Override
         protected String doInBackground(RequestPackage... params) {
             String content = HttpManager.getData(params[0]);
             return content;
         }
 
-        /*@Override
+        @Override
         protected void onPreExecute() {
             super.onPreExecute();
-        }*/
+        }
 
         @Override
         protected void onPostExecute(String s) {
-            done();
+            done(s);
         }
     }
 }

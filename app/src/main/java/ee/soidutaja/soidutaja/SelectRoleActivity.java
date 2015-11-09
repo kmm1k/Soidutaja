@@ -129,7 +129,7 @@ public class SelectRoleActivity extends AppCompatActivity {
 
         callbackManager=CallbackManager.Factory.create();
         loginButton= (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions("public_profile", "email","user_friends");
+        loginButton.setReadPermissions("public_profile", "email", "user_friends");
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +285,7 @@ public class SelectRoleActivity extends AppCompatActivity {
                 drives = JSONParser.parseDriveObjects(result);
                 Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
                 intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
+                intent.putExtra("locationsList", (ArrayList<String>) locations);
                 intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
                 startActivity(intent);
             }
