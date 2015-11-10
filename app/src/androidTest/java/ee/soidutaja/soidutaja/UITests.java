@@ -108,7 +108,7 @@ public class UITests {
         onView(withId(R.id.nextButton)).perform(click());
         onView(withText("OK")).perform(click());
     }
-    
+
     @Test
     public void facebookLogInTest(){
         onView(withId(R.id.login_button)).perform(click());
