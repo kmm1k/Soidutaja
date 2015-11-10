@@ -118,4 +118,5 @@ public class UITests {
     public void facebookLogInTest(){
         onView(withId(R.id.login_button)).perform(click());
     }
+
 }
