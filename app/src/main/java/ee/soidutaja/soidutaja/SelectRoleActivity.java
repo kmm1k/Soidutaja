@@ -85,12 +85,12 @@ public class SelectRoleActivity extends AppCompatActivity {
                 }
             }
         });
-        if(isLoggedIn()) {
+        /*if(isLoggedIn()) {
             profileBtn.setVisibility(View.VISIBLE);
         }
         else {
             profileBtn.setVisibility(View.INVISIBLE);
-        }
+        }*/
 
         if (isOnline()) {
             Log.d("lammas", "nett on olemas");

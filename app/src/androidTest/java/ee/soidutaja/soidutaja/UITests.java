@@ -70,6 +70,12 @@ public class UITests {
     }
 
     @Test
+    public void testProfileButton(){
+        onView(withId(R.id.driverButton)).check(matches(notNullValue()));
+        onView(withId(R.id.profileButton)).perform(click());
+    }
+
+    @Test
     public void testMakeDrive() {
         onView(withId(R.id.driverButton)).check(matches(notNullValue()));
         onView(withId(R.id.driverButton)).perform(click());
