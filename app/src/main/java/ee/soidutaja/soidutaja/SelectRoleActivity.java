@@ -85,6 +85,12 @@ public class SelectRoleActivity extends AppCompatActivity {
                 }
             }
         });
+        if(isLoggedIn()) {
+            profileBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            profileBtn.setVisibility(View.INVISIBLE);
+        }
 
         if (isOnline()) {
             Log.d("lammas", "nett on olemas");
@@ -174,6 +180,7 @@ public class SelectRoleActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             Toast.makeText(SelectRoleActivity.this,"welcome " + user.getName(), Toast.LENGTH_LONG).show();
+                            profileBtn.setVisibility(View.VISIBLE);
                         }
                     });
 
@@ -195,6 +202,8 @@ public class SelectRoleActivity extends AppCompatActivity {
 
         }
     };
+
+    
 
     public void addButton() {
         passengerBtn.setOnClickListener(new View.OnClickListener() {

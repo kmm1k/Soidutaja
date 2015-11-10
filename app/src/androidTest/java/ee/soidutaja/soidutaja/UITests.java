@@ -108,14 +108,10 @@ public class UITests {
         onView(withId(R.id.nextButton)).perform(click());
         onView(withText("OK")).perform(click());
     }
-    @Test
-    public void testIfUserRetardCantSelectCorrectThings(){
-        onView(withId(R.id.driverButton)).check(matches(notNullValue()));
-        onView(withId(R.id.profileButton)).perform(click());
-
-    }
+    
     @Test
     public void facebookLogInTest(){
         onView(withId(R.id.login_button)).perform(click());
     }
+
 }
