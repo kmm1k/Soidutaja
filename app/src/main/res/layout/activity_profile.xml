@@ -5,7 +5,7 @@
     android:id="@+id/headerLinearLay"
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView
+    <com.facebook.login.widget.ProfilePictureView
         android:src="@drawable/pingu"
         android:id="@+id/pingu"
         android:layout_height="100dp"
