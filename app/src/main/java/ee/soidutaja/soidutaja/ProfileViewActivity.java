@@ -49,7 +49,6 @@ public class ProfileViewActivity extends AppCompatActivity {
             User user = getIntent().getParcelableExtra("user");
             userName.setText(user.getName());
             String id = user.getFacebookID();
-//            Log.d("lammas", id);
             picfield.setProfileId(id);
         }
 

@@ -82,13 +82,18 @@ public class UITests {
         onView(withId(R.id.endSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Parnu"))).perform(click());
 
-        onView(withId(R.id.priceField)).perform(typeText("5"));
-        onView(withId(R.id.spotsField)).perform(typeText("5"));
+        onView(withId(R.id.nextButton)).perform(click());
 
-        //onView(withId(R.id.additionalInfo)).perform(typeText("lisainfo"));
+        onView(withId(R.id.priceField)).perform(typeText("5"));
+        onView(withId(R.id.nextButton)).perform(click());
+        onView(withId(R.id.spotsField)).perform(typeText("5"));
+        onView(withId(R.id.nextButton)).perform(click());
+
+        onView(withId(R.id.additionalInfo)).perform(typeText("lisainfo"));
 
         onView(withId(R.id.dateButton)).perform(click());
         onView(withText("OK")).perform(click());
+        onView(withId(R.id.nextButton)).perform(click());
 
         onView(withId(R.id.timeButton)).perform(click());
         //onView(withText("5")).perform(click());
@@ -101,7 +106,7 @@ public class UITests {
         onView(withId(R.id.endSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Turi"))).perform(click());
         onView(withId(R.id.nextButton)).perform(click());
-
+        onView(withText("OK")).perform(click());
     }
     @Test
     public void testIfUserRetardCantSelectCorrectThings(){

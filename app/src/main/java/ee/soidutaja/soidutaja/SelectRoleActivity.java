@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ee.soidutaja.soidutaja.facebook.*;
+
 
 public class SelectRoleActivity extends AppCompatActivity {
 
@@ -60,16 +60,16 @@ public class SelectRoleActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginManager.getInstance().logOut();
-                Intent logOut = new Intent(SelectRoleActivity.this, LoginActivity.class);
-                startActivity(logOut);
-                finish();
-            }
-        });
+//        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+//        loginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                LoginManager.getInstance().logOut();
+//                Intent logOut = new Intent(SelectRoleActivity.this, LoginActivity.class);
+//                startActivity(logOut);
+//                finish();
+//            }
+//        });
 
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
