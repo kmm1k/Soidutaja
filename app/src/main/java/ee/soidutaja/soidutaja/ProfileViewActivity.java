@@ -47,7 +47,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             User user = getIntent().getParcelableExtra("user");
             userName.setText(user.getName());
             String id = user.getFacebookID();
-            Log.d("lammas", id);
+//            Log.d("lammas", id);
             String url = "http://graph.facebook.com/" + id + "/picture?type=large";
             GetImage getImage = new GetImage();
             getImage.execute(url);

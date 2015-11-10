@@ -1,6 +1,7 @@
 <RelativeLayout
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:id="@+id/headerLinearLay"
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
