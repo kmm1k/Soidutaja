@@ -1,7 +1,9 @@
 package ee.soidutaja.soidutaja;
 
 import android.content.DialogInterface;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 //import android.support.test.rule.ActivityTestRule;
 //import android.support.test.runner.AndroidJUnit4;
@@ -14,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import javax.annotation.CheckReturnValue;
 
+import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.setFailureHandler;
@@ -91,7 +94,9 @@ public class UITests {
         //onView(withText("5")).perform(click());
         //onView(withText("20")).perform(click());
         onView(withText("OK")).perform(click());
+        ViewActions.closeSoftKeyboard();
         onView(withId(R.id.name)).perform(typeText("LAMMAS"));
+        ViewActions.closeSoftKeyboard();
         onView(withId(R.id.nextButton)).perform(click());
         onView(withId(R.id.endSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Turi"))).perform(click());
