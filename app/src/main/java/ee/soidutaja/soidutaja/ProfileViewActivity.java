@@ -1,5 +1,6 @@
 package ee.soidutaja.soidutaja;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,12 +46,10 @@ public class ProfileViewActivity extends AppCompatActivity {
         Log.d("lammas", driverList.toString());
         userName = (TextView) findViewById(R.id.usernameTextView);
 
-        if(getIntent().getParcelableExtra("user") != null) {
-            User user = getIntent().getParcelableExtra("user");
-            userName.setText(user.getName());
-            String id = user.getFacebookID();
-            picfield.setProfileId(id);
-        }
+        Context context = getBaseContext();
+        userName.setText(SharedPreferencesManager.readData(context)[0]);
+        picfield.setProfileId(SharedPreferencesManager.readData(context)[1]);
+
 
         DriveAdapter adapter = new DriveAdapter(this, driverList);
 

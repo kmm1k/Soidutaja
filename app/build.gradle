@@ -27,10 +27,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.1'
     androidTestCompile 'com.android.support.test:runner:0.4'
-    // Set this dependency to use JUnit 4 rules
     androidTestCompile 'com.android.support.test:rules:0.4'
-    // Set this dependency to build and run Espresso tests
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2'
     compile 'com.android.support:appcompat-v7:23.0.1'
@@ -39,11 +38,7 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'org.mockito:mockito-all:1.8.4'
-    // Unit testing dependencies
-    testCompile 'junit:junit:4.12'
-    // Set this dependency if you want to use Mockito
-    // Set this dependency if you want to use Hamcrest matching
-    testCompile 'org.hamcrest:hamcrest-library:1.1'
+    compile 'com.sromku:simple-fb:4.1.1'
 }
 android {
     // ...

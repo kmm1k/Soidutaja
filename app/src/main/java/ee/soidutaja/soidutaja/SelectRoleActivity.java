@@ -1,7 +1,7 @@
 package ee.soidutaja.soidutaja;
 
-import android.content.Context;
-import android.content.Intent;
+import android.content.*;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -26,6 +26,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.sromku.simple.fb.listeners.OnLogoutListener;
 
 import org.json.JSONObject;
 
@@ -60,37 +61,16 @@ public class SelectRoleActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-//        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                LoginManager.getInstance().logOut();
-//                Intent logOut = new Intent(SelectRoleActivity.this, LoginActivity.class);
-//                startActivity(logOut);
-//                finish();
-//            }
-//        });
-
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isOnline()) {
-                    RequestPackage rp = new RequestPackage();
-                    rp.setMethod("POST");
-                    rp.setUri("http://193.40.243.200/soidutaja_php/");
-                    rp.setParam("allDrives", "yes");
-
-                    Task task = new Task();
-                    task.execute(rp);
-                }
-            }
-        });
-        /*if(isLoggedIn()) {
+        if(isLoggedIn()) {
             profileBtn.setVisibility(View.VISIBLE);
         }
         else {
             profileBtn.setVisibility(View.INVISIBLE);
-        }*/
+            Context context = getBaseContext();
+            SharedPreferencesManager.clearData(context);
+        }
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
 
         if (isOnline()) {
             Log.d("lammas", "nett on olemas");
@@ -112,10 +92,10 @@ public class SelectRoleActivity extends AppCompatActivity {
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken == null) {
-            return false;
-        } else {
+        if (accessToken != null) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -133,6 +113,7 @@ public class SelectRoleActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        Log.d("lammas", "resuming selectRoleActivity");
         callbackManager=CallbackManager.Factory.create();
         loginButton= (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile", "email", "user_friends");
@@ -140,7 +121,16 @@ public class SelectRoleActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginButton.registerCallback(callbackManager, mCallBack);
+                if(isLoggedIn()) {
+                    Log.d("lammas", "logged out");
+                    Context context = getBaseContext();
+                    SharedPreferencesManager.clearData(context);
+                    profileBtn.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    loginButton.registerCallback(callbackManager, mCallBack);
+                    profileBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -149,12 +139,6 @@ public class SelectRoleActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        if(isLoggedIn()) {
-            profileBtn.setVisibility(View.VISIBLE);
-        }
-        else {
-            profileBtn.setVisibility(View.INVISIBLE);
-        }
     }
 
 
@@ -171,19 +155,19 @@ public class SelectRoleActivity extends AppCompatActivity {
                                 GraphResponse response) {
 
                             Log.e("response: ", response + "");
+                            Context context = getBaseContext();
                             try {
                                 user.setFacebookID(object.getString("id").toString());
                                 user.setEmail(object.getString("email").toString());
                                 user.setName(object.getString("name").toString());
                                 user.setGender(object.getString("gender").toString());
+                                SharedPreferencesManager.saveData(context, user);
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
-                            Toast.makeText(SelectRoleActivity.this,"welcome " + user.getName(), Toast.LENGTH_LONG).show();
-                            profileBtn.setVisibility(View.VISIBLE);
+                            Toast.makeText(SelectRoleActivity.this,"welcome " + SharedPreferencesManager.readData(context)[0], Toast.LENGTH_LONG).show();
                         }
                     });
-
             Bundle parameters = new Bundle();
             parameters.putString("fields", "id, name, email, gender");
             Log.d("logi", parameters.toString());
@@ -203,14 +187,11 @@ public class SelectRoleActivity extends AppCompatActivity {
         }
     };
 
-    
-
     public void addButton() {
         passengerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isOnline()) {
-                    progressBar.setVisibility(View.VISIBLE);
                     Intent intent = new Intent(SelectRoleActivity.this, SelectLocationsActivity.class);
                     intent.putExtra("loc", (ArrayList<String>) locations);
                     startActivity(intent);
@@ -226,6 +207,21 @@ public class SelectRoleActivity extends AppCompatActivity {
                 Intent intent = new Intent(SelectRoleActivity.this, MakeDriveActivity.class);
                 intent.putExtra("loc", (ArrayList<String>) locations);
                 startActivity(intent);
+            }
+        });
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOnline()) {
+                    RequestPackage rp = new RequestPackage();
+                    rp.setMethod("POST");
+                    rp.setUri("http://193.40.243.200/soidutaja_php/");
+                    rp.setParam("allDrives", "yes");
+
+                    Task task = new Task();
+                    task.execute(rp);
+                }
             }
         });
     }
@@ -295,7 +291,6 @@ public class SelectRoleActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
                 intent.putExtra("locationsList", (ArrayList<String>) locations);
                 intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
-                intent.putExtra("user", (Parcelable) user);
                 startActivity(intent);
             }
         }
