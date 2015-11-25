@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class TripInfoView extends AppCompatActivity {
     private Button editTripButton;
     private Button removeTripButton;
     private List<String> locationsList;
+    private List<Drive> drives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,18 @@ public class TripInfoView extends AppCompatActivity {
         obj = getIntent().getParcelableExtra("obj");
         TextView name = (TextView) findViewById(R.id.driverName);
         name.setText(obj.getUser());
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestPackage rp = new RequestPackage();
+                rp.setMethod("POST");
+                rp.setUri("http://193.40.243.200/soidutaja_php/");
+                rp.setParam("allDrives", "yes");
+
+                Task task = new Task();
+                task.execute(rp);
+            }
+        });
         TextView origin = (TextView) findViewById(R.id.origin);
         origin.setText(obj.getOrigin());
         TextView destination = (TextView) findViewById(R.id.destination);
@@ -163,6 +177,38 @@ public class TripInfoView extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             done(s);
+        }
+    }
+    private class Task extends AsyncTask<RequestPackage, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            String content = HttpManager.getData(params[0]);
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null) {
+                Log.d("lammas", "somthing went wrong");
+            } else {
+                Log.d("lammas", result);
+                drives = JSONParser.parseDriveObjects(result);
+                Intent intent = new Intent(TripInfoView.this, ProfileViewActivity.class);
+                intent.putExtra("fId",obj.getfId());
+                intent.putExtra("user", "anotheruser");
+                intent.putExtra("name", obj.getUser());
+                startActivity(intent);
+                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
+//                intent.putExtra("locationsList", (ArrayList<String>) locations);
+                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 }

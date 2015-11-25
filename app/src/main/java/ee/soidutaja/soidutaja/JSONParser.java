@@ -32,6 +32,7 @@ public class JSONParser {
                 drive.setPrice(obj.getString("price"));
                 drive.setDateTime(obj.getString("start_time"));
                 drive.setId(obj.getString("id"));
+                drive.setfId("1220781151");
                 drive.setAvailableSlots(Integer.parseInt(obj.getString("open_slots")));
 
                 driveList.add(drive);

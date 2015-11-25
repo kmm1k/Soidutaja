@@ -41,14 +41,21 @@ public class ProfileViewActivity extends AppCompatActivity {
         picfield = (ProfilePictureView) findViewById(R.id.pingu);
 
         List<Drive> driverList = getIntent().getParcelableArrayListExtra("driverList");
-        locationsList = getIntent().getStringArrayListExtra("locationsList");
+        //locationsList = getIntent().getStringArrayListExtra("locationsList");
         List<Drive> passengerList = getIntent().getParcelableArrayListExtra("passengerList");
-        Log.d("lammas", driverList.toString());
+        //Log.d("lammas", driverList.toString());
         userName = (TextView) findViewById(R.id.usernameTextView);
 
         Context context = getBaseContext();
-        userName.setText(SharedPreferencesManager.readData(context)[0]);
-        picfield.setProfileId(SharedPreferencesManager.readData(context)[1]);
+        if(getIntent().getStringExtra("user")==null) {
+            userName.setText(SharedPreferencesManager.readData(context)[0]);
+            Log.d("lammas", SharedPreferencesManager.readData(context)[1]);
+            picfield.setProfileId(SharedPreferencesManager.readData(context)[1]);
+        }else{
+            userName.setText(getIntent().getStringExtra("name"));
+            picfield.setProfileId(getIntent().getStringExtra("fId"));
+        }
+
 
 
         DriveAdapter adapter = new DriveAdapter(this, driverList);

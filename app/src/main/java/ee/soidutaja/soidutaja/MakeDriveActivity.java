@@ -33,7 +33,6 @@ public class MakeDriveActivity extends AppCompatActivity {
     private Button nxtBtn;
     private EditText price;
     private EditText spots;
-    private EditText name;
     private EditText info;
     private String dateString;
     private String timeString;
@@ -51,7 +50,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         time = (TextView) findViewById(R.id.time);
         price = (EditText) findViewById(R.id.priceField);
         spots = (EditText) findViewById(R.id.spotsField);
-        name = (EditText) findViewById(R.id.name);
+
         nxtBtn = (Button) findViewById(R.id.nextButton);
         info = (EditText) findViewById(R.id.additionalInfo);
 
@@ -81,7 +80,8 @@ public class MakeDriveActivity extends AppCompatActivity {
                                     drive.setDateTime(date + " " + time);
                                     drive.setAvailableSlots(Integer.parseInt(spots.getText().toString()));
                                     drive.setPrice(price.getText().toString());
-                                    drive.setUser(name.getText().toString());
+                                    drive.setUser(SharedPreferencesManager.readData(getBaseContext())[0]);
+                                    drive.setfId(SharedPreferencesManager.readData(getBaseContext())[1]);
                                     if(info.getText().toString().matches("")) {
                                         drive.setInfo("Puudub");
                                     }
@@ -114,7 +114,6 @@ public class MakeDriveActivity extends AppCompatActivity {
         price.setText(drive.getPrice());
         info.setText(drive.getInfo());
         spots.setText("" + drive.getAvailableSlots());
-        name.setText(drive.getUser());
         String origin= drive.getOrigin();
         String destination= drive.getDestination();
         endSpinner.setAdapter(adapterEnd);
@@ -135,7 +134,8 @@ public class MakeDriveActivity extends AppCompatActivity {
         rp.setUri("http://193.40.243.200/soidutaja_php/");
         rp.setParam("origin", drive.getOrigin());
         rp.setParam("destination", drive.getDestination());
-        rp.setParam("name", drive.getUser());
+        rp.setParam("name", SharedPreferencesManager.readData(this.getBaseContext())[0]);
+        rp.setParam("fId", SharedPreferencesManager.readData(this.getBaseContext())[1]);
         rp.setParam("price", drive.getPrice());
         rp.setParam("openSlots", "" + drive.getAvailableSlots());
         rp.setParam("dateTime", drive.getDateTime());
@@ -146,7 +146,7 @@ public class MakeDriveActivity extends AppCompatActivity {
     }
 
     public boolean isInputValid() {
-        if(areSpinnersValid() && isTimeValid() && isDateValid() && isPriceValid() && isSpotsValid() && isNameValid()) {
+        if(areSpinnersValid() && isTimeValid() && isDateValid() && isPriceValid() && isSpotsValid() /* && isNameValid()*/) {
             return true;
         }
         else {
@@ -209,17 +209,17 @@ public class MakeDriveActivity extends AppCompatActivity {
             return true;
         }
     }
-
-    public boolean isNameValid() {
-        if(name.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(MakeDriveActivity.this, "Lisa enda nimi", Toast.LENGTH_SHORT).show();
-            name.setError("Lisa enda nimi!");
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
+//    TODO do not DELETE!!
+//    public boolean isNameValid() {
+//        if(name.getText().toString().equalsIgnoreCase("")) {
+//            Toast.makeText(MakeDriveActivity.this, "Lisa enda nimi", Toast.LENGTH_SHORT).show();
+//            name.setError("Lisa enda nimi!");
+//            return false;
+//        }
+//        else {
+//            return true;
+//        }
+//    }
 
     public void showTimePickerDialog(View v) {
         Calendar currentTime = Calendar.getInstance();

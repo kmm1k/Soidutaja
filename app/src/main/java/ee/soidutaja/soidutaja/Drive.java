@@ -10,12 +10,13 @@ public class Drive implements Parcelable {
 
     private String id;
     private String user;
-    public String origin;
+    private String origin;
     private String destination;
     private String dateTime;
     private String price;
     private String info;
     private int availableSlots;
+    private String fId;
 
     public Drive() {
 
@@ -29,6 +30,7 @@ public class Drive implements Parcelable {
         price = in.readString();
         info = in.readString();
         availableSlots = in.readInt();
+        fId = in.readString();
     }
 
     public static final Creator<Drive> CREATOR = new Creator<Drive>() {
@@ -42,6 +44,14 @@ public class Drive implements Parcelable {
             return new Drive[size];
         }
     };
+
+    public String getfId() {
+        return fId;
+    }
+
+    public void setfId(String fId) {
+        this.fId = fId;
+    }
 
     public String getInfo() {
         return info;
@@ -122,6 +132,7 @@ public class Drive implements Parcelable {
         dest.writeString(price);
         dest.writeString(info);
         dest.writeInt(availableSlots);
+        dest.writeString(fId);
     }
 
     @Override
@@ -134,6 +145,7 @@ public class Drive implements Parcelable {
                 ", price='" + price + '\'' +
                 ", info='" + info + '\'' +
                 ", availableSlots=" + availableSlots +
+                ", fId=" + fId +
                 '}';
     }
 }
