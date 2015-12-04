@@ -69,6 +69,7 @@ public class UITests {
         onView(withText("OK")).perform(click());
     }
 
+
     @Test
     public void testProfileButton(){
         onView(withId(R.id.driverButton)).check(matches(notNullValue()));

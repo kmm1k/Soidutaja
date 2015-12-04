@@ -32,18 +32,29 @@ public class ProfileViewActivity extends AppCompatActivity {
     private List<String> locationsList;
     private TextView userName;
     private ProfilePictureView picfield;
+    private User user;
+    private ListView drivesListOutput;
+    private ListView passengerListOutput;
+    private Context context;
+
+    private List<Drive> creatorDrives;
+    private List<Drive> passengerDrives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        context = getBaseContext();
+
         picfield = (ProfilePictureView) findViewById(R.id.pingu);
 
-        List<Drive> driverList = getIntent().getParcelableArrayListExtra("driverList");
-        //locationsList = getIntent().getStringArrayListExtra("locationsList");
-        List<Drive> passengerList = getIntent().getParcelableArrayListExtra("passengerList");
-        //Log.d("lammas", driverList.toString());
+        getCreatorList();
+        getPassengerList();
+
+        drivesListOutput=(ListView) findViewById(R.id.driverList);
+        passengerListOutput=(ListView) findViewById(R.id.passengerList);
+
         userName = (TextView) findViewById(R.id.usernameTextView);
 
         Context context = getBaseContext();
@@ -55,16 +66,6 @@ public class ProfileViewActivity extends AppCompatActivity {
             userName.setText(getIntent().getStringExtra("name"));
             picfield.setProfileId(getIntent().getStringExtra("fId"));
         }
-
-
-
-        DriveAdapter adapter = new DriveAdapter(this, driverList);
-
-        final ListView drivesListOutput=(ListView) findViewById(R.id.driverList);
-        drivesListOutput.setAdapter(adapter);
-
-        final ListView passengerListOutput=(ListView) findViewById(R.id.passengerList);
-        passengerListOutput.setAdapter(adapter);
 
         drivesListOutput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -96,6 +97,33 @@ public class ProfileViewActivity extends AppCompatActivity {
         });
     }
 
+    public void getCreatorList() {
+        RequestPackage rp = new RequestPackage();
+        rp.setUri("http://193.40.243.200/soidutaja_php/");
+        rp.setParam("inDriveCreator", "yes");
+        rp.setMethod("POST");
+        if(user != null) {
+            rp.setParam("fbId", user.getFacebookID());
+        } else {
+            rp.setParam("fbId", SharedPreferencesManager.readData(getBaseContext())[1]);
+        }
+        Task1 task = new Task1();
+        task.execute(rp);
+    }
+
+    public void getPassengerList() {
+        RequestPackage rp = new RequestPackage();
+        rp.setUri("http://193.40.243.200/soidutaja_php/");
+        rp.setParam("inDrivePassanger", "yes");
+        rp.setMethod("POST");
+        if(user != null) {
+            rp.setParam("fbId", user.getFacebookID());
+        } else {
+            rp.setParam("fbId", SharedPreferencesManager.readData(getBaseContext())[1]);
+        }
+        Task2 task = new Task2();
+        task.execute(rp);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,5 +145,41 @@ public class ProfileViewActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class Task1 extends AsyncTask<RequestPackage, String, List<Drive>> {
+
+        @Override
+        protected List<Drive> doInBackground(RequestPackage... params) {
+            String result = HttpManager.getData(params[0]);
+            Log.d("lammas1", result);
+            return JSONParser.parseDriveObjects(result);
+        }
+
+        @Override
+        protected void onPostExecute(List<Drive> drives) {
+            creatorDrives = drives;
+            DriveAdapter adapter = new DriveAdapter(context, creatorDrives);
+
+            drivesListOutput.setAdapter(adapter);
+        }
+    }
+
+    class Task2 extends AsyncTask<RequestPackage, String, List<Drive>> {
+
+        @Override
+        protected List<Drive> doInBackground(RequestPackage... params) {
+            String result = HttpManager.getData(params[0]);
+            Log.d("lammas2", result);
+            return JSONParser.parseDriveObjects(result);
+        }
+
+        @Override
+        protected void onPostExecute(List<Drive> drives) {
+            passengerDrives = drives;
+            DriveAdapter adapter = new DriveAdapter(context, passengerDrives);
+
+            passengerListOutput.setAdapter(adapter);
+        }
     }
 }

@@ -160,7 +160,16 @@ public class SelectRoleActivity extends AppCompatActivity {
                                 user.setName(object.getString("name").toString());
                                 user.setGender(object.getString("gender").toString());
                                 SharedPreferencesManager.saveData(context, user);
+
+                                RequestPackage rp = new RequestPackage();
+                                rp.setParam("addUser", "yes");
+                                rp.setParam("name", user.getName());
+                                rp.setParam("fbId", user.getFacebookID());
+                                CreateUser createUser = new CreateUser();
+                                createUser.execute(rp);
+
                             }catch (Exception e){
+                                Log.d("lammas", "JSONexception on login");
                                 e.printStackTrace();
                             }
                             Toast.makeText(SelectRoleActivity.this,"welcome " + SharedPreferencesManager.readData(context)[0], Toast.LENGTH_LONG).show();
@@ -212,13 +221,8 @@ public class SelectRoleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isOnline()) {
-                    RequestPackage rp = new RequestPackage();
-                    rp.setMethod("POST");
-                    rp.setUri("http://193.40.243.200/soidutaja_php/");
-                    rp.setParam("allDrives", "yes");
-
-                    Task task = new Task();
-                    task.execute(rp);
+                    Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -242,11 +246,6 @@ public class SelectRoleActivity extends AppCompatActivity {
     private class DownloadData extends AsyncTask<RequestPackage, Void, String> {
 
         @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
         protected String doInBackground(RequestPackage... params) {
             String content = HttpManager.getData(params[0]);
             return content;
@@ -261,6 +260,15 @@ public class SelectRoleActivity extends AppCompatActivity {
                 locations = JSONParser.parseLocations(result);
                 addButton();
             }
+        }
+    }
+
+    private class CreateUser extends AsyncTask<RequestPackage, Void, String> {
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            String content = HttpManager.getData(params[0]);
+            return content;
         }
     }
 
@@ -286,9 +294,9 @@ public class SelectRoleActivity extends AppCompatActivity {
                 Log.d("lammas", result);
                 drives = JSONParser.parseDriveObjects(result);
                 Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
-                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
-                intent.putExtra("locationsList", (ArrayList<String>) locations);
-                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
+//                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
+//                intent.putExtra("locationsList", (ArrayList<String>) locations);
+//                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
                 startActivity(intent);
             }
         }

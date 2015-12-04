@@ -1,4 +1,4 @@
-//package ee.soidutaja.soidutaja;
+package ee.soidutaja.soidutaja;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
@@ -6,10 +6,12 @@ import android.test.ApplicationTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
+import ee.soidutaja.soidutaja.Drive;
+
 /**
  * Created by KristiP on 5.11.2015.
  */
-/*public class DriveTest extends ApplicationTestCase<Application> {
+public class DriveTest extends ApplicationTestCase<Application> {
 
     private Drive drive;
 
@@ -77,4 +79,4 @@ import org.junit.Test;
         assertTrue(toString.contains(", info='" + drive.getInfo()));
         assertTrue(toString.contains(", availableSlots=" + drive.getAvailableSlots()));
     }
-}*/
+}

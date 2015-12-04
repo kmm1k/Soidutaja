@@ -135,7 +135,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         rp.setParam("origin", drive.getOrigin());
         rp.setParam("destination", drive.getDestination());
         rp.setParam("name", SharedPreferencesManager.readData(this.getBaseContext())[0]);
-        rp.setParam("fId", SharedPreferencesManager.readData(this.getBaseContext())[1]);
+        rp.setParam("fbId", SharedPreferencesManager.readData(this.getBaseContext())[1]);
         rp.setParam("price", drive.getPrice());
         rp.setParam("openSlots", "" + drive.getAvailableSlots());
         rp.setParam("dateTime", drive.getDateTime());
