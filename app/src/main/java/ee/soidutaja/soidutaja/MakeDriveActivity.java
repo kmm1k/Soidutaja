@@ -37,7 +37,9 @@ public class MakeDriveActivity extends AppCompatActivity {
     private String dateString;
     private String timeString;
     private Drive drive;
+    private String id;
     ArrayAdapter<String> adapterEnd;
+    List<Drive> driveList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         endSpinner.setAdapter(adapterEnd);
         startSpinner.setAdapter(adapterEnd);
 
-        List<Drive> driveList = getIntent().getParcelableArrayListExtra("info");
+        driveList = getIntent().getParcelableArrayListExtra("info");
         if (driveList != null) {
             Drive localDrive = driveList.get(0);
             setDriveInfo(localDrive);
@@ -77,7 +79,7 @@ public class MakeDriveActivity extends AppCompatActivity {
                                     drive = new Drive();
                                     drive.setOrigin(startSpinner.getSelectedItem().toString());
                                     drive.setDestination(endSpinner.getSelectedItem().toString());
-                                    drive.setDateTime(date + " " + time);
+                                    drive.setDateTime(dateString + " " + timeString);
                                     drive.setAvailableSlots(Integer.parseInt(spots.getText().toString()));
                                     drive.setPrice(price.getText().toString());
                                     drive.setUser(SharedPreferencesManager.readData(getBaseContext())[0]);
@@ -109,6 +111,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         String dateTime= drive.getDateTime();
         String formatDate =dateTime.substring(0,10);
         String formatTime= dateTime.substring(11);
+        String id = drive.getId();
         date.setText(formatDate);
         time.setText(formatTime);
         price.setText(drive.getPrice());
@@ -140,6 +143,9 @@ public class MakeDriveActivity extends AppCompatActivity {
         rp.setParam("openSlots", "" + drive.getAvailableSlots());
         rp.setParam("dateTime", drive.getDateTime());
         rp.setParam("description", drive.getInfo());
+        if(driveList != null) {
+            rp.setParam("editDrive", "yes");
+        }
         PushPackage pb = new PushPackage();
         pb.execute(rp);
 
@@ -240,7 +246,8 @@ public class MakeDriveActivity extends AppCompatActivity {
                     minute = 0 + minute;
                 }
 
-                timeString = hour + ":" + minute;
+                timeString = hour + ":" + minute + ":00";
+                Log.d("lammas", timeString);
                 time.setText(timeString);
             }
         }, hour, minute, true);//Yes 24 hour time
@@ -297,7 +304,7 @@ public class MakeDriveActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            Intent intent = new Intent(MakeDriveActivity.this, CreatedDriveView.class);
+            Intent intent = new Intent(MakeDriveActivity.this, ProfileViewActivity.class);
             intent.putExtra("driveObj", drive);
             startActivity(intent);
         }

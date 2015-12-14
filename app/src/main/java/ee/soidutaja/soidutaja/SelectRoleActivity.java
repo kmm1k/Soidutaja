@@ -160,15 +160,19 @@ public class SelectRoleActivity extends AppCompatActivity {
                                 user.setName(object.getString("name").toString());
                                 user.setGender(object.getString("gender").toString());
                                 SharedPreferencesManager.saveData(context, user);
-
+                                Log.d("lammaserr", "line 163");
                                 RequestPackage rp = new RequestPackage();
+                                Log.d("lammaserr", "line 165");
+                                rp.setMethod("POST");
+                                rp.setUri("http://193.40.243.200/soidutaja_php/");
                                 rp.setParam("addUser", "yes");
                                 rp.setParam("name", user.getName());
                                 rp.setParam("fbId", user.getFacebookID());
+                                Log.d("lammaserr", "line 171");
                                 CreateUser createUser = new CreateUser();
                                 createUser.execute(rp);
 
-                            }catch (Exception e){
+                            } catch (Exception e){
                                 Log.d("lammas", "JSONexception on login");
                                 e.printStackTrace();
                             }

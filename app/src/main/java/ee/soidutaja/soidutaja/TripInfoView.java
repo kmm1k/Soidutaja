@@ -1,7 +1,6 @@
 package ee.soidutaja.soidutaja;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,7 +23,6 @@ public class TripInfoView extends AppCompatActivity {
 
     private Button takeFreeSpaceButton;
     private RatingBar ratingBar;
-    private float rating;
     private Drive obj;
     private Button editTripButton;
     private Button removeTripButton;
@@ -52,7 +50,7 @@ public class TripInfoView extends AppCompatActivity {
                 rp.setUri("http://193.40.243.200/soidutaja_php/");
                 rp.setParam("allDrives", "yes");
 
-                Task task = new Task();
+                ViewProfileTask task = new ViewProfileTask();
                 task.execute(rp);
             }
         });
@@ -105,13 +103,6 @@ public class TripInfoView extends AppCompatActivity {
             }
         });
 
-        ratingBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rating = ratingBar.getRating();
-            }
-        });
-
         editTripButton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -126,6 +117,19 @@ public class TripInfoView extends AppCompatActivity {
             }
 
 
+        });
+
+        removeTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestPackage rp = new RequestPackage();
+                rp.setUri("http://193.40.243.200/soidutaja_php/");
+                rp.setMethod("POST");
+                rp.setParam("deleteDrive", "yes");
+                rp.setParam("id", obj.getId());
+                DeleteDriveTask deleteDriveTask = new DeleteDriveTask();
+                deleteDriveTask.execute(rp);
+            }
         });
     }
 
@@ -179,11 +183,7 @@ public class TripInfoView extends AppCompatActivity {
             done(s);
         }
     }
-    private class Task extends AsyncTask<RequestPackage, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-        }
+    private class ViewProfileTask extends AsyncTask<RequestPackage, String, String> {
 
         @Override
         protected String doInBackground(RequestPackage... params) {
@@ -202,13 +202,28 @@ public class TripInfoView extends AppCompatActivity {
                 intent.putExtra("fId",obj.getfId());
                 intent.putExtra("user", "anotheruser");
                 intent.putExtra("name", obj.getUser());
-                startActivity(intent);
                 intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
 //                intent.putExtra("locationsList", (ArrayList<String>) locations);
                 intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
                 startActivity(intent);
                 finish();
             }
+        }
+    }
+
+    class DeleteDriveTask extends AsyncTask<RequestPackage, String, String> {
+
+        @Override
+        protected String doInBackground(RequestPackage... params) {
+            HttpManager.getData(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Intent intent = new Intent(TripInfoView.this, ProfileViewActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }
