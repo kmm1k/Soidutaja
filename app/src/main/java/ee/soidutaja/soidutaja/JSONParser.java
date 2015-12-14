@@ -32,12 +32,12 @@ public class JSONParser {
                 drive.setPrice(obj.getString("price"));
                 drive.setDateTime(obj.getString("start_time"));
                 drive.setId(obj.getString("id"));
-                drive.setfId("1220781151");
+//                drive.setfId(obj.getInt("fbId") + "");
                 drive.setAvailableSlots(Integer.parseInt(obj.getString("open_slots")));
 
                 driveList.add(drive);
                 i++;
-                Log.d("lammas", drive.toString());
+                Log.d("lammas", "drive tostring: " + drive.toString());
             }
             if(driveList == null) {
                 Log.d("lammas", "JSON drive object parser on perses");

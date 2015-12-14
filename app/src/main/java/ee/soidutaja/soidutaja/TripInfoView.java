@@ -153,6 +153,8 @@ public class TripInfoView extends AppCompatActivity {
         p.setMethod("POST");
         p.setUri("http://193.40.243.200/soidutaja_php/");
         p.setParam("driveIdTakeSlot", obj.getId());
+        p.setParam("role", "2");
+        p.setParam("fbId", SharedPreferencesManager.readData(getApplicationContext())[1]);
         TakeSlot takeSlot = new TakeSlot();
         takeSlot.execute(p);
 

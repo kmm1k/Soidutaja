@@ -31,6 +31,7 @@ public class Drive implements Parcelable {
         info = in.readString();
         availableSlots = in.readInt();
         fId = in.readString();
+        id = in.readString();
     }
 
     public static final Creator<Drive> CREATOR = new Creator<Drive>() {
@@ -133,6 +134,7 @@ public class Drive implements Parcelable {
         dest.writeString(info);
         dest.writeInt(availableSlots);
         dest.writeString(fId);
+        dest.writeString(id);
     }
 
     @Override
@@ -146,6 +148,7 @@ public class Drive implements Parcelable {
                 ", info='" + info + '\'' +
                 ", availableSlots=" + availableSlots +
                 ", fId=" + fId +
+                ", id=" + id +
                 '}';
     }
 }

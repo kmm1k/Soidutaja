@@ -148,6 +148,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         if(drive.getDateTime() == null) {
             rp.setParam("dateTime", date.getText().toString() + " " + time.getText().toString());
         } else {
+            rp.setParam("role", "1");
             rp.setParam("dateTime", drive.getDateTime());
         }
         rp.setParam("description", drive.getInfo());
