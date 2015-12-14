@@ -1,11 +1,9 @@
 package ee.soidutaja.soidutaja;
 
 import android.content.*;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -153,23 +151,21 @@ public class SelectRoleActivity extends AppCompatActivity {
                                 GraphResponse response) {
 
                             Log.e("response: ", response + "");
-                            Context context = getBaseContext();
+                            Context context = getApplicationContext();
+                            SharedPreferencesManager.clearData(context);
                             try {
                                 user.setFacebookID(object.getString("id").toString());
                                 user.setEmail(object.getString("email").toString());
                                 user.setName(object.getString("name").toString());
                                 user.setGender(object.getString("gender").toString());
                                 SharedPreferencesManager.saveData(context, user);
-                                Log.d("lammaserr", "line 163");
                                 RequestPackage rp = new RequestPackage();
-                                Log.d("lammaserr", "line 165");
                                 rp.setMethod("POST");
                                 rp.setUri("http://193.40.243.200/soidutaja_php/");
                                 rp.setParam("addUser", "yes");
                                 rp.setParam("name", user.getName());
                                 rp.setParam("fbId", user.getFacebookID());
-                                Log.d("lammaserr", "line 171");
-                                CreateUser createUser = new CreateUser();
+                                CreateUserTask createUser = new CreateUserTask();
                                 createUser.execute(rp);
 
                             } catch (Exception e){
@@ -226,6 +222,7 @@ public class SelectRoleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isOnline()) {
                     Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
+                    intent.putExtra("loc", (ArrayList<String>) locations);
                     startActivity(intent);
                 }
             }
@@ -267,7 +264,7 @@ public class SelectRoleActivity extends AppCompatActivity {
         }
     }
 
-    private class CreateUser extends AsyncTask<RequestPackage, Void, String> {
+    private class CreateUserTask extends AsyncTask<RequestPackage, Void, String> {
 
         @Override
         protected String doInBackground(RequestPackage... params) {
@@ -297,11 +294,11 @@ public class SelectRoleActivity extends AppCompatActivity {
             } else {
                 Log.d("lammas", result);
                 drives = JSONParser.parseDriveObjects(result);
-                Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
-//                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
-//                intent.putExtra("locationsList", (ArrayList<String>) locations);
-//                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
-                startActivity(intent);
+//                Intent intent = new Intent(SelectRoleActivity.this, ProfileViewActivity.class);
+////                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
+//                intent.putStringArrayListExtra("loc", (ArrayList<String>) locations);
+////                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
+//                startActivity(intent);
             }
         }
     }

@@ -48,6 +48,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         context = getBaseContext();
 
         picfield = (ProfilePictureView) findViewById(R.id.pingu);
+        locationsList = getIntent().getStringArrayListExtra("loc");
+        Log.d("lammas", "locations: " + locationsList.toString());
 
         getCreatorList();
         getPassengerList();
@@ -105,7 +107,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         if(user != null) {
             rp.setParam("fbId", user.getFacebookID());
         } else {
-            rp.setParam("fbId", SharedPreferencesManager.readData(getBaseContext())[1]);
+            rp.setParam("fbId", SharedPreferencesManager.readData(getApplicationContext())[1]);
         }
         Task1 task = new Task1();
         task.execute(rp);
@@ -119,7 +121,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         if(user != null) {
             rp.setParam("fbId", user.getFacebookID());
         } else {
-            rp.setParam("fbId", SharedPreferencesManager.readData(getBaseContext())[1]);
+            rp.setParam("fbId", SharedPreferencesManager.readData(getApplicationContext())[1]);
         }
         Task2 task = new Task2();
         task.execute(rp);

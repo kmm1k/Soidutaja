@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -38,8 +39,10 @@ public class MakeDriveActivity extends AppCompatActivity {
     private String timeString;
     private Drive drive;
     private String id;
+    private String dateTime;
     ArrayAdapter<String> adapterEnd;
     List<Drive> driveList;
+    ArrayList<String> locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         nxtBtn = (Button) findViewById(R.id.nextButton);
         info = (EditText) findViewById(R.id.additionalInfo);
 
-        List<String> locations = getIntent().getStringArrayListExtra("loc");
+        locations = getIntent().getStringArrayListExtra("loc");
         adapterEnd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations);
         endSpinner.setAdapter(adapterEnd);
         startSpinner.setAdapter(adapterEnd);
@@ -82,8 +85,8 @@ public class MakeDriveActivity extends AppCompatActivity {
                                     drive.setDateTime(dateString + " " + timeString);
                                     drive.setAvailableSlots(Integer.parseInt(spots.getText().toString()));
                                     drive.setPrice(price.getText().toString());
-                                    drive.setUser(SharedPreferencesManager.readData(getBaseContext())[0]);
-                                    drive.setfId(SharedPreferencesManager.readData(getBaseContext())[1]);
+                                    drive.setUser(SharedPreferencesManager.readData(getApplicationContext())[0]);
+                                    drive.setfId(SharedPreferencesManager.readData(getApplicationContext())[1]);
                                     if(info.getText().toString().matches("")) {
                                         drive.setInfo("Puudub");
                                     }
@@ -108,10 +111,10 @@ public class MakeDriveActivity extends AppCompatActivity {
     private void setDriveInfo(Drive drive) {
 
         //date.setText(drive.getDateTime());
-        String dateTime= drive.getDateTime();
-        String formatDate =dateTime.substring(0,10);
-        String formatTime= dateTime.substring(11);
-        String id = drive.getId();
+        String dateTime = drive.getDateTime();
+        String formatDate = dateTime.substring(0,10);
+        String formatTime = dateTime.substring(11);
+        id = drive.getId();
         date.setText(formatDate);
         time.setText(formatTime);
         price.setText(drive.getPrice());
@@ -132,19 +135,25 @@ public class MakeDriveActivity extends AppCompatActivity {
     }
 
     public void pushDrive(Drive drive) {
+        Log.d("lammas", "tuli pushDrive sisse");
         RequestPackage rp = new RequestPackage();
         rp.setMethod("POST");
         rp.setUri("http://193.40.243.200/soidutaja_php/");
         rp.setParam("origin", drive.getOrigin());
         rp.setParam("destination", drive.getDestination());
-        rp.setParam("name", SharedPreferencesManager.readData(this.getBaseContext())[0]);
-        rp.setParam("fbId", SharedPreferencesManager.readData(this.getBaseContext())[1]);
+        rp.setParam("name", SharedPreferencesManager.readData(this.getApplicationContext())[0]);
+        rp.setParam("fbId", SharedPreferencesManager.readData(this.getApplicationContext())[1]);
         rp.setParam("price", drive.getPrice());
         rp.setParam("openSlots", "" + drive.getAvailableSlots());
-        rp.setParam("dateTime", drive.getDateTime());
+        if(drive.getDateTime() == null) {
+            rp.setParam("dateTime", date.getText().toString() + " " + time.getText().toString());
+        } else {
+            rp.setParam("dateTime", drive.getDateTime());
+        }
         rp.setParam("description", drive.getInfo());
         if(driveList != null) {
             rp.setParam("editDrive", "yes");
+            rp.setParam("id", id);
         }
         PushPackage pb = new PushPackage();
         pb.execute(rp);
@@ -306,6 +315,7 @@ public class MakeDriveActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             Intent intent = new Intent(MakeDriveActivity.this, ProfileViewActivity.class);
             intent.putExtra("driveObj", drive);
+            intent.putStringArrayListExtra("loc", locations);
             startActivity(intent);
         }
     }
