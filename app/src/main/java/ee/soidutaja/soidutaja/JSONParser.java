@@ -68,6 +68,9 @@ public class JSONParser {
                 locations.add(obj.getString("location"));
                 i++;
             }
+
+            Log.d("lammas", locations.get(0));
+
             if(locations == null) {
                 Log.d("lammas", "JSON location parser on perses");
             }

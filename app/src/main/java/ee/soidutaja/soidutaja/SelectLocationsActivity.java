@@ -59,7 +59,7 @@ public class SelectLocationsActivity extends AppCompatActivity {
                     rp.setParam("origin", startSpinner.getSelectedItem().toString());
                     rp.setParam("destination", endSpinner.getSelectedItem().toString());
 
-                    Task task = new Task();
+                    GetDrivesTask task = new GetDrivesTask();
                     task.execute(rp);
                 }
                 else {
@@ -77,7 +77,7 @@ public class SelectLocationsActivity extends AppCompatActivity {
                     rp.setUri("http://193.40.243.200/soidutaja_php/");
                     rp.setParam("allDrives", "yes");
 
-                    Task task = new Task();
+                    GetDrivesTask task = new GetDrivesTask();
                     task.execute(rp);
                 }
             }
@@ -110,7 +110,7 @@ public class SelectLocationsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class Task extends AsyncTask<RequestPackage, String, String> {
+    private class GetDrivesTask extends AsyncTask<RequestPackage, String, String> {
 
         @Override
         protected void onPreExecute() {
