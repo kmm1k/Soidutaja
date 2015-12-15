@@ -41,17 +41,23 @@ public class TripInfoView extends AppCompatActivity {
 
         obj = getIntent().getParcelableExtra("obj");
         TextView name = (TextView) findViewById(R.id.driverName);
+        Log.d("lammas", "obj tostring: " + obj);
         name.setText(obj.getUser());
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestPackage rp = new RequestPackage();
-                rp.setMethod("POST");
-                rp.setUri("http://193.40.243.200/soidutaja_php/");
-                rp.setParam("allDrives", "yes");
-
-                ViewProfileTask task = new ViewProfileTask();
-                task.execute(rp);
+                Log.d("lammas", "obj tostring: " + obj);
+                Intent go = new Intent(TripInfoView.this, ProfileViewActivity.class);
+                go.putExtra("name", obj.getUser());
+                go.putExtra("fbId", obj.getfId());
+                startActivity(go);
+//                RequestPackage rp = new RequestPackage();
+//                rp.setMethod("POST");
+//                rp.setUri("http://193.40.243.200/soidutaja_php/");
+//                rp.setParam("allDrives", "yes");
+//
+//                ViewProfileTask task = new ViewProfileTask();
+//                task.execute(rp);
             }
         });
         TextView origin = (TextView) findViewById(R.id.origin);
@@ -189,33 +195,33 @@ public class TripInfoView extends AppCompatActivity {
             done(s);
         }
     }
-    private class ViewProfileTask extends AsyncTask<RequestPackage, String, String> {
-
-        @Override
-        protected String doInBackground(RequestPackage... params) {
-            String content = HttpManager.getData(params[0]);
-            return content;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result == null) {
-                Log.d("lammas", "somthing went wrong");
-            } else {
-                Log.d("lammas", result);
-                drives = JSONParser.parseDriveObjects(result);
-                Intent intent = new Intent(TripInfoView.this, ProfileViewActivity.class);
-                intent.putExtra("fId",obj.getfId());
-                intent.putExtra("user", "anotheruser");
-                intent.putExtra("name", obj.getUser());
-                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
-//                intent.putExtra("locationsList", (ArrayList<String>) locations);
-                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
-                startActivity(intent);
-                finish();
-            }
-        }
-    }
+//    private class ViewProfileTask extends AsyncTask<RequestPackage, String, String> {
+//
+//        @Override
+//        protected String doInBackground(RequestPackage... params) {
+//            String content = HttpManager.getData(params[0]);
+//            return content;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            if (result == null) {
+//                Log.d("lammas", "somthing went wrong");
+//            } else {
+//                Log.d("lammas", result);
+//                drives = JSONParser.parseDriveObjects(result);
+//                Intent intent = new Intent(TripInfoView.this, ProfileViewActivity.class);
+//                intent.putExtra("fId",obj.getfId());
+//                intent.putExtra("user", "anotheruser");
+//                intent.putExtra("name", obj.getUser());
+//                intent.putParcelableArrayListExtra("driverList", (ArrayList<? extends Parcelable>) drives);
+////                intent.putExtra("locationsList", (ArrayList<String>) locations);
+//                intent.putParcelableArrayListExtra("passengerList", (ArrayList<? extends Parcelable>) drives);
+//                startActivity(intent);
+//                finish();
+//            }
+//        }
+//    }
 
     class DeleteDriveTask extends AsyncTask<RequestPackage, String, String> {
 

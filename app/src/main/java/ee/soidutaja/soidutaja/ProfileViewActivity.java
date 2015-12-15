@@ -48,27 +48,28 @@ public class ProfileViewActivity extends AppCompatActivity {
         context = getBaseContext();
 
         picfield = (ProfilePictureView) findViewById(R.id.pingu);
+        userName = (TextView) findViewById(R.id.usernameTextView);
 //        locationsList = getIntent().getStringArrayListExtra("loc");
         locationsList = ListOfLocations.getLocations();
         Log.d("lammas", "locations: " + locationsList.toString());
 
+        Context context = getApplicationContext();
+        if(getIntent().getStringExtra("name") == null) {
+            userName.setText(SharedPreferencesManager.readData(context)[0]);
+            Log.d("lammas", SharedPreferencesManager.readData(context)[1]);
+            picfield.setProfileId(SharedPreferencesManager.readData(context)[1]);
+        } else {
+            user = new User();
+            user.setName(getIntent().getStringExtra("name"));
+            user.setFacebookID(getIntent().getStringExtra("fbId"));
+            userName.setText(user.getName());
+            picfield.setProfileId(user.getFacebookID());
+        }
         getCreatorList();
         getPassengerList();
 
         drivesListOutput=(ListView) findViewById(R.id.driverList);
         passengerListOutput=(ListView) findViewById(R.id.passengerList);
-
-        userName = (TextView) findViewById(R.id.usernameTextView);
-
-        Context context = getBaseContext();
-        if(getIntent().getStringExtra("user")==null) {
-            userName.setText(SharedPreferencesManager.readData(context)[0]);
-            Log.d("lammas", SharedPreferencesManager.readData(context)[1]);
-            picfield.setProfileId(SharedPreferencesManager.readData(context)[1]);
-        }else{
-            userName.setText(getIntent().getStringExtra("name"));
-            picfield.setProfileId(getIntent().getStringExtra("fId"));
-        }
 
         drivesListOutput.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

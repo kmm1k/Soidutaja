@@ -152,7 +152,6 @@ public class SelectRoleActivity extends AppCompatActivity {
 
                             Log.e("response: ", response + "");
                             Context context = getApplicationContext();
-                            SharedPreferencesManager.clearData(context);
                             try {
                                 user.setFacebookID(object.getString("id").toString());
                                 user.setEmail(object.getString("email").toString());
