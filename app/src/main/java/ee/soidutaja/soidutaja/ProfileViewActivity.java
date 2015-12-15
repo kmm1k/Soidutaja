@@ -48,7 +48,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         context = getBaseContext();
 
         picfield = (ProfilePictureView) findViewById(R.id.pingu);
-        locationsList = getIntent().getStringArrayListExtra("loc");
+//        locationsList = getIntent().getStringArrayListExtra("loc");
+        locationsList = ListOfLocations.getLocations();
         Log.d("lammas", "locations: " + locationsList.toString());
 
         getCreatorList();
@@ -125,6 +126,12 @@ public class ProfileViewActivity extends AppCompatActivity {
         }
         Task2 task = new Task2();
         task.execute(rp);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ProfileViewActivity.this, SelectRoleActivity.class);
+        startActivity(intent);
     }
 
     @Override

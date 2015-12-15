@@ -125,8 +125,9 @@ public class TripInfoView extends AppCompatActivity {
                 RequestPackage rp = new RequestPackage();
                 rp.setUri("http://193.40.243.200/soidutaja_php/");
                 rp.setMethod("POST");
-                rp.setParam("deleteDrive", "yes");
+                rp.setParam("removeUserFromDrive", "yes");
                 rp.setParam("id", obj.getId());
+                rp.setParam("fbId", SharedPreferencesManager.readData(getApplicationContext())[1]);
                 DeleteDriveTask deleteDriveTask = new DeleteDriveTask();
                 deleteDriveTask.execute(rp);
             }
@@ -165,6 +166,9 @@ public class TripInfoView extends AppCompatActivity {
         obj.setAvailableSlots(obj.getAvailableSlots() - 1);
         TextView slots = (TextView) findViewById(R.id.slots);
         slots.setText("" + obj.getAvailableSlots());
+        Intent intent = new Intent(TripInfoView.this, ProfileViewActivity.class);
+        intent.putExtra("loc", (ArrayList<String>) locationsList);
+        startActivity(intent);
     }
 
     private class TakeSlot extends AsyncTask<RequestPackage, String, String> {
@@ -224,6 +228,7 @@ public class TripInfoView extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             Intent intent = new Intent(TripInfoView.this, ProfileViewActivity.class);
+            intent.putExtra("loc", (ArrayList<String>) locationsList);
             startActivity(intent);
             finish();
         }

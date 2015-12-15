@@ -259,6 +259,7 @@ public class SelectRoleActivity extends AppCompatActivity {
             } else {
                 Log.d("lammas", result);
                 locations = JSONParser.parseLocations(result);
+                ListOfLocations.setLocations((ArrayList<String>) locations);
                 addButton();
             }
         }
