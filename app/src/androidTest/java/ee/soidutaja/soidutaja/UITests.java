@@ -10,6 +10,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.test.ActivityInstrumentationTestCase2;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +42,72 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 
-
 public class UITests {
 
     @Rule
     public IntentsTestRule<SelectRoleActivity> mActivityRule = new IntentsTestRule<>(SelectRoleActivity.class);
+
+    /*@After
+    public void facebookLogInTest(){
+        onView(withId(R.id.login_button)).perform(click());
+    }*/
+
+
+    @Test
+    public void checkDriveWhereImDriver() {
+        onView(withId(R.id.profileButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.driverList)).atPosition(0).perform(click());
+        onView(withId(R.id.editTrip)).perform(click());
+
+        onView(withId(R.id.chooseStart)).check(matches(notNullValue()));
+
+        onView(withId(R.id.startSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Tallinn"))).perform(click());
+
+        onView(withId(R.id.endSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Viljandi"))).perform(click());
+
+        //onView(withId(R.id.nextButton)).perform(click());
+
+        onView(withId(R.id.priceField)).perform(clearText(), typeText("5"));
+        //onView(withId(R.id.nextButton)).perform(click());
+        onView(withId(R.id.priceField)).perform(clearText(), typeText("5"));
+        //onView(withId(R.id.nextButton)).perform(click());
+
+
+        onView(withId(R.id.additionalInfo)).perform(clearText(), typeText("lisainfo"));
+
+        onView(withId(R.id.dateButton)).perform(click());
+        onView(withText("OK")).perform(click());
+        //onView(withId(R.id.nextButton)).perform(click());
+
+        onView(withId(R.id.timeButton)).perform(click());
+        //onView(withText("5")).perform(click());
+        //onView(withText("20")).perform(click());
+        onView(withText("OK")).perform(click());
+        ViewActions.closeSoftKeyboard();
+        //onView(withId(R.id.name)).perform(typeText("LAMMAS"));
+        ViewActions.closeSoftKeyboard();
+        onView(withId(R.id.nextButton)).perform(click());
+        //onView(withId(R.id.endSpinner)).perform(click());
+        //onData(allOf(is(instanceOf(String.class)), is("Tallinn"))).perform(click());
+        //onView(withId(R.id.nextButton)).perform(click());
+        onView(withText("OK")).perform(click());
+    }
+
+    @Test
+    public void checkDriveWhereImPassanger() {
+        onView(withId(R.id.profileButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.passengerList)).atPosition(0).perform(click());
+        onView(withId(R.id.removeTrip)).perform(click());
+    }
+
+    @Test
+    public void seeOthersProfile(){
+        onView(withId(R.id.profileButton)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.passengerList)).atPosition(0).perform(click());
+        onView(withId(R.id.driverName)).perform(click());
+    }
 
     @Test
     public void testViewPassenger() {
@@ -53,13 +115,13 @@ public class UITests {
         onView(withId(R.id.passengerButton)).perform(click());
 
         onView(withId(R.id.startSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Parnu"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Tallinn"))).perform(click());
 
         onView(withId(R.id.endSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Turi"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Viljandi"))).perform(click());
 
         onView(withId(R.id.nextButton)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
+        onData(anything()).atPosition(0).perform(click());
 
         onView(withId(R.id.takeSpaceInCar)).perform(click());
 //        onView(withId(R.id.freeSpacesTitle)).check(matches(notNullValue()));
@@ -71,7 +133,7 @@ public class UITests {
 
 
     @Test
-    public void testProfileButton(){
+    public void testProfileButton() {
         onView(withId(R.id.driverButton)).check(matches(notNullValue()));
         onView(withId(R.id.profileButton)).perform(click());
     }
@@ -84,13 +146,17 @@ public class UITests {
         onView(withId(R.id.chooseStart)).check(matches(notNullValue()));
 
         onView(withId(R.id.startSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Parnu"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Viljandi"))).perform(click());
 
         onView(withId(R.id.endSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Parnu"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Viljandi"))).perform(click());
 
         onView(withId(R.id.nextButton)).perform(click());
 
+        onView(withId(R.id.startSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Tallinn"))).perform(click());
+
+        onView(withId(R.id.nextButton)).perform(click());
         onView(withId(R.id.priceField)).perform(typeText("5"));
         onView(withId(R.id.nextButton)).perform(click());
         onView(withId(R.id.spotsField)).perform(typeText("5"));
@@ -107,18 +173,14 @@ public class UITests {
         //onView(withText("20")).perform(click());
         onView(withText("OK")).perform(click());
         ViewActions.closeSoftKeyboard();
-        onView(withId(R.id.name)).perform(typeText("LAMMAS"));
+        //onView(withId(R.id.name)).perform(typeText("LAMMAS"));
         ViewActions.closeSoftKeyboard();
         onView(withId(R.id.nextButton)).perform(click());
-        onView(withId(R.id.endSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Turi"))).perform(click());
-        onView(withId(R.id.nextButton)).perform(click());
+        //onView(withId(R.id.endSpinner)).perform(click());
+        //onData(allOf(is(instanceOf(String.class)), is("Tallinn"))).perform(click());
+        //onView(withId(R.id.nextButton)).perform(click());
         onView(withText("OK")).perform(click());
     }
 
-    @Test
-    public void facebookLogInTest(){
-        onView(withId(R.id.login_button)).perform(click());
-    }
 
 }
